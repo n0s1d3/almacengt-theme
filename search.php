@@ -125,7 +125,8 @@ $paged        = max( 1, get_query_var( 'paged', 1 ) );
         <input type="hidden" name="post_type" value="product">
         <input type="search" name="s"
                placeholder="<?php esc_attr_e( 'Buscar de nuevo...', 'almacengt' ); ?>"
-               style="flex:1; padding:10px 14px; border:1px solid var(--border); border-radius:4px; font-size:14px; color:var(--text);">
+               maxlength="100"
+               style="flex:1; padding:10px 14px; border:1px solid var(--border); border-radius:4px; font-size:14px; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
         <button type="submit"
                 style="padding:10px 20px; background:var(--accent); color:#000; font-weight:700; border:none; border-radius:4px; cursor:pointer; font-size:14px;">
           <?php esc_html_e( 'Buscar', 'almacengt' ); ?>

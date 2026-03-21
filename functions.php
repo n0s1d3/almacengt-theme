@@ -19,19 +19,20 @@ add_action( 'after_setup_theme', 'almacengt_setup' );
 
 function almacengt_scripts() {
   wp_enqueue_style( 'almacengt-inter', 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap', array(), null );
-  wp_enqueue_style( 'almacengt-style', get_stylesheet_uri(), array('almacengt-inter'), wp_get_theme()->get('Version') );
+  $ver = '2.1';
+  wp_enqueue_style( 'almacengt-style', get_stylesheet_uri(), array('almacengt-inter'), $ver );
   // Opcional: estilos Woocommerce
-  wp_enqueue_style( 'almacengt-woocommerce', get_template_directory_uri() . '/woocommerce.css', array('almacengt-style'), wp_get_theme()->get('Version') );
+  wp_enqueue_style( 'almacengt-woocommerce', get_template_directory_uri() . '/woocommerce.css', array('almacengt-style'), $ver );
   // Enqueue WooCommerce scripts
   if ( class_exists( 'WooCommerce' ) ) {
     wp_enqueue_script( 'woocommerce' );
     wp_enqueue_script( 'wc-add-to-cart' );
   }
   // Enqueue carousel script
-  wp_enqueue_script( 'almacengt-carousel', get_template_directory_uri() . '/js/carousel.js', array('jquery'), wp_get_theme()->get('Version'), true );
+  wp_enqueue_script( 'almacengt-carousel', get_template_directory_uri() . '/js/carousel.js', array('jquery'), $ver, true );
 
-  // Live search dropdown (desktop only — hidden via CSS on mobile/tablet)
-  wp_enqueue_script( 'almacengt-live-search', get_template_directory_uri() . '/js/live-search.js', array('jquery'), wp_get_theme()->get('Version'), true );
+  // Live search dropdown
+  wp_enqueue_script( 'almacengt-live-search', get_template_directory_uri() . '/js/live-search.js', array('jquery'), $ver, true );
   wp_localize_script( 'almacengt-live-search', 'agtSearch', array(
     'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
     'nonce'     => wp_create_nonce( 'agt-live-search' ),
@@ -70,12 +71,19 @@ function agt_live_search_handler() {
     $search->the_post();
     $product = wc_get_product( get_the_ID() );
     if ( ! $product ) continue;
+    $title = get_the_title();
+    if ( mb_strlen( $title ) > 40 ) {
+      $title = mb_substr( $title, 0, 38 ) . '…';
+    }
+    $cat = wp_strip_all_tags( wc_get_product_category_list( get_the_ID() ) );
+    // Keep only the first category if multiple are listed
+    $cat = explode( ',', $cat )[0];
     $results[] = array(
-      'title' => get_the_title(),
+      'title' => $title,
       'url'   => get_permalink(),
       'price' => wp_strip_all_tags( $product->get_price_html() ),
       'image' => get_the_post_thumbnail_url( get_the_ID(), 'thumbnail' ) ?: '',
-      'cat'   => wp_strip_all_tags( wc_get_product_category_list( get_the_ID() ) ),
+      'cat'   => trim( $cat ),
     );
   }
   wp_reset_postdata();

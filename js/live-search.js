@@ -28,10 +28,17 @@
 		lastQ = '';
 	}
 
+	function truncate( str, max ) {
+		return str.length > max ? str.substring( 0, max - 1 ) + '…' : str;
+	}
+
 	function renderResults( results, q ) {
 		if ( ! results.length ) {
 			return '<div class="sdrop-empty">Sin resultados para <strong>&ldquo;' + escHtml( q ) + '&rdquo;</strong></div>';
 		}
+
+		var isMobile = window.innerWidth < 768;
+		var maxChars = isMobile ? 30 : 45;
 
 		var html = '<ul class="sdrop-list">';
 		$.each( results, function ( i, p ) {
@@ -44,7 +51,7 @@
 					'<a href="' + escHtml( p.url ) + '" class="sdrop-link">' +
 						img +
 						'<span class="sdrop-info">' +
-							'<span class="sdrop-name">' + escHtml( p.title ) + '</span>' +
+							'<span class="sdrop-name">' + escHtml( truncate( p.title, maxChars ) ) + '</span>' +
 							cat +
 						'</span>' +
 						'<span class="sdrop-price">' + escHtml( p.price ) + '</span>' +
