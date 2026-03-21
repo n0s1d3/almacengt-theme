@@ -18,48 +18,58 @@
 
 <header class="navbar">
   <div class="navbar-inner">
+    <!-- Logo + site name -->
     <a class="site-branding" href="<?php echo esc_url( home_url( '/' ) ); ?>">
       <span class="logo-wrapper">
-        <?php
-        if ( has_custom_logo() ) {
-          the_custom_logo();
-        } else {
-          ?>
-          <span class="logo-mark">AG</span>
-          <?php
-        }
-        ?>
+        <?php if ( has_custom_logo() ) : the_custom_logo(); else : ?>
+          <span class="logo-mark">AGT</span>
+        <?php endif; ?>
       </span>
-      <span class="site-name"><?php bloginfo( 'name' ); ?></span>
     </a>
 
+    <!-- Search — post_type=product filters results to WooCommerce products only -->
+    <form class="search-bar" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+      <input type="hidden" name="post_type" value="product">
+      <input type="search" name="s"
+             placeholder="<?php esc_attr_e( 'Buscar productos...', 'almacengt' ); ?>"
+             value="<?php echo esc_attr( get_search_query() ); ?>"
+             autocomplete="off">
+      <button type="submit" aria-label="<?php esc_attr_e( 'Buscar', 'almacengt' ); ?>">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+    </form>
+
+    <!-- Account + Cart -->
+    <div class="actions">
+      <?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
+        <a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="action-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span><?php esc_html_e( 'Cuenta', 'almacengt' ); ?></span>
+        </a>
+        <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="action-link action-cart">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span><?php esc_html_e( 'Carrito', 'almacengt' ); ?></span>
+          <?php if ( function_exists( 'WC' ) && ! is_null( WC()->cart ) ) :
+            $count = absint( WC()->cart->get_cart_contents_count() );
+            if ( $count > 0 ) : ?>
+              <span class="cart-count"><?php echo $count; ?></span>
+            <?php endif;
+          endif; ?>
+        </a>
+      <?php endif; ?>
+    </div>
+
+    <!-- Nav — moved after actions so search bar owns the center space -->
     <nav class="main-nav">
-      <?php
-      wp_nav_menu( array(
+      <?php wp_nav_menu( array(
         'theme_location' => 'menu-1',
         'menu_id'        => 'primary-menu',
         'container'      => false,
         'fallback_cb'    => false,
-      ) );
-      ?>
+      ) ); ?>
     </nav>
-
-    <form class="search-bar" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-      <input type="search" name="s" placeholder="<?php esc_attr_e( 'Buscar productos...', 'almacengt' ); ?>" value="<?php echo get_search_query(); ?>" />
-      <button type="submit">🔍</button>
-    </form>
-
-    <div class="actions">
-      <?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
-        <a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>"><?php esc_html_e( 'Cuenta', 'almacengt' ); ?></a>
-        <a href="<?php echo esc_url( wc_get_cart_url() ); ?>">
-          <?php esc_html_e( 'Carrito', 'almacengt' ); ?>
-          <?php if ( ! is_null( WC()->cart ) ) : ?>
-            (<?php echo absint( WC()->cart->get_cart_contents_count() ); ?>)
-          <?php endif; ?>
-        </a>
-      <?php endif; ?>
-    </div>
   </div>
 </header>
 
