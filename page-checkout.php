@@ -52,9 +52,9 @@ get_header();
 }
 .agt-checkout-page form.woocommerce-checkout {
   display: grid !important;
-  grid-template-columns: 1fr 360px !important;
+  grid-template-columns: 1fr 400px !important;
   grid-template-rows: auto;
-  gap: 24px !important;
+  gap: 8px !important;
   align-items: start;
   width: 100%;
 }

@@ -107,9 +107,9 @@ $all_cats = get_terms( array(
         <h1 class="shop-title">
           <?php if ( $current_cat ) :
             $cat_obj = get_term_by( 'slug', $current_cat, 'product_cat' );
-            echo $cat_obj ? esc_html( $cat_obj->name ) : esc_html__( 'Tienda', 'almacengt' );
+            echo $cat_obj ? esc_html( $cat_obj->name ) : esc_html__( 'Almacen', 'almacengt' );
           else :
-            esc_html_e( 'Tienda', 'almacengt' );
+            esc_html_e( 'Almacen', 'almacengt' );
           endif; ?>
         </h1>
       </header>

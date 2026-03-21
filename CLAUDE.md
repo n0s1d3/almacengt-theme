@@ -51,18 +51,34 @@ Source: https://coolors.co/palette/000000-14213d-fca311-e5e5e5-ffffff
 |---|---|
 | `style.css` | Full design system — CSS variables, all component styles, responsive breakpoints |
 | `woocommerce.css` | WooCommerce visual overrides (loaded after style.css) |
-| `functions.php` | Theme setup, WC support, script/style enqueuing |
-| `header.php` | Topbar (black, full-width) + sticky dark navy navbar |
+| `functions.php` | Theme setup, WC support, script/style enqueuing, live search AJAX handler |
+| `header.php` | Topbar (black, full-width) + sticky dark navy navbar with search + account/cart icons |
 | `footer.php` | Minimal footer — just copyright text |
 | `index.php` | Homepage: hero → quick-cats strip → deals → categories → featured products |
-| `archive-product.php` | Shop / category archive: sidebar + product grid |
+| `page-shop.php` | **Custom shop page template** (`Template Name: AlmacenGT — Tienda`) — bypasses WC archive system |
+| `page-checkout.php` | Custom checkout template — renders `[woocommerce_checkout]` shortcode |
+| `page-cart.php` | Custom cart template — renders WooCommerce cart content |
+| `search.php` | WordPress search results template — filters to products only |
+| `archive-product.php` | WC category/tag archive fallback (sidebar + product grid) |
 | `single-product.php` | Single product page wrapper (delegates to WC template) |
-| `woocommerce.php` | WC fallback wrapper — cart, checkout, account, order confirmation |
+| `woocommerce.php` | WC fallback wrapper — account, order confirmation |
 | `page.php` | Generic WordPress page template (safety fallback) |
 | `sidebar-shop.php` | Shop sidebar: category filter + price range filter |
 | `woocommerce/content-product.php` | Product card component used in all grids |
 | `js/carousel.js` | Hero carousel stub (minimal, ready to expand) |
+| `js/live-search.js` | Desktop-only live search dropdown (debounced AJAX, product preview) |
 | `template-parts/breadcrumb.php` | Breadcrumb helper |
+
+---
+
+## Architecture: Custom Page Template Strategy
+
+**Core approach:** Rather than fighting WooCommerce's archive/template system, every major storefront page (shop, cart, checkout) uses a **custom WordPress page template** (via `Template Name:` header comment). This gives full control over layout and bypasses WC's template intercepting.
+
+- `page-shop.php` — assigned to the "Tienda" page in WP Admin. Does its own `WP_Query` for products with URL-based filtering (`?cat=slug`, `?orderby=X`, `?pg=X`).
+- `page-checkout.php` — renders checkout with `echo do_shortcode('[woocommerce_checkout]')`. Do NOT use `the_content()` — it depends on the page editor having the shortcode entered manually.
+- `page-cart.php` — same pattern for cart.
+- **WooCommerce "Shop page" setting can be left blank** — `page-shop.php` works independently. If breadcrumb "Continue Shopping" links are needed, add: `add_filter('woocommerce_get_shop_page_id', fn() => get_page_by_path('tienda')->ID ?? 0)`.
 
 ---
 
@@ -127,11 +143,46 @@ The `<aside class="shop-sidebar">` wrapper is provided by `archive-product.php`.
 ### 5. `ul.products` is hidden
 `woocommerce.css` hides `.woocommerce ul.products { display: none !important }` because we use a custom `.products-grid` div. Related/upsell products override this with higher-specificity `display: grid !important`.
 
-### 6. `woocommerce.php` is the fallback for all WC pages
-Cart, checkout, my account, order confirmation all route through `woocommerce.php`, which wraps `woocommerce_content()` in `.container`.
+### 6. `woocommerce.php` is the fallback for non-custom WC pages
+Account, order confirmation route through `woocommerce.php`, which wraps `woocommerce_content()` in `.container`. Cart and checkout have their own custom templates now.
 
 ### 7. `page.php` exists as a safety net
 Prevents WordPress static pages from falling back to `index.php` (which would show the homepage hero/deals layout on every page).
+
+### 8. Checkout layout — two CSS conflicts to know about
+`woocommerce.css` has `.woocommerce-checkout .woocommerce { display: grid; grid-template-columns: 1fr 400px }` which turns the shortcode's `.woocommerce` div into a grid container. `page-checkout.php` overrides this with `display: block !important` on `.agt-checkout-page .woocommerce`.
+
+Additionally, `woocommerce-layout.css` sets `width: 48%` on `#customer_details` and `#order_review`. In CSS Grid, floats are ignored but `width` still applies, so each column only fills 48% of its track — leaving a visible gap. Override both with `width: 100%`.
+
+### 9. WooCommerce "Shop page" setting conflicts with custom templates
+When WooCommerce has a page designated as its "Shop page," it intercepts requests to that URL and runs its own product archive query — routing through `archive-product.php` regardless of the page's assigned custom template. Leave the WooCommerce shop page blank when using `page-shop.php`.
+
+### 10. `search.php` is required
+Without `search.php`, WordPress falls back to `index.php` for `?s=` queries, rendering the full homepage. `search.php` handles `?s=query&post_type=product` and uses the main WordPress query (already filtered to products by the hidden `post_type` input in the search form).
+
+---
+
+## Live Search Dropdown
+
+Desktop-only (`@media (min-width: 1025px)`). Architecture:
+
+- **`functions.php`**: registers `wp_ajax_agt_live_search` + `wp_ajax_nopriv_agt_live_search` actions. Handler uses `check_ajax_referer`, sanitizes `$_GET['q']`, queries up to 6 products, returns `wp_send_json_success()` with array of `{title, url, price, image, cat}`.
+- **`wp_localize_script`** passes `agtSearch.ajaxUrl`, `agtSearch.nonce`, `agtSearch.searchUrl` to JS.
+- **`js/live-search.js`**: appends `.search-dropdown` into `.search-bar` form, debounces input (280ms, min 2 chars), fires GET to `admin-ajax.php`, renders product list with loading dots animation. Closes on outside click, Escape, or form submit.
+- **`style.css`**: `.search-bar` has `position: relative` (NOT `overflow: hidden`) so the dropdown can escape. All `.sdrop-*` styles and the `@keyframes sdrop-bounce` loading animation are inside `@media (min-width: 1025px)`.
+
+**Important:** `.search-bar` must NOT have `overflow: hidden` — it clips the absolutely-positioned dropdown. The button gets `border-radius: 0 4px 4px 0` directly instead.
+
+---
+
+## Header Layout
+Order of flex children in `.navbar-inner`: **logo → search-bar → actions → main-nav**
+
+The `.search-bar` has `flex: 1` so it fills all available center space. This order was intentional — putting nav after actions means the search bar owns the center.
+
+Search form has `<input type="hidden" name="post_type" value="product">` to filter results to WooCommerce products only.
+
+Account and cart links use icon + label stacked vertically (`.action-link`), matching BestBuy style. Cart shows a `.cart-count` badge when items > 0.
 
 ---
 
@@ -153,3 +204,10 @@ Use `https://placehold.co/WxH/bgcolor/textcolor?text=Label` (NOT `via.placeholde
 | Fatal error if WC inactive | `WC()->cart` called unconditionally in header | Wrapped in `function_exists()` check |
 | `single-product.php` unstyled | Used `.main-content`/`.content-section` (undefined) | Replaced with `.container` |
 | Duplicate WC support registration | `almacengt_woocommerce_support()` ran twice | Removed duplicate function |
+| Checkout shows nothing | `the_content()` needs shortcode in page editor | Replaced with `echo do_shortcode('[woocommerce_checkout]')` |
+| Checkout cramped on right | `woocommerce.css` grid turned shortcode wrapper into grid container | Added `display: block !important` on `.agt-checkout-page .woocommerce` |
+| Checkout columns gap | `woocommerce-layout.css` sets `width: 48%` on both columns; width applies in grid | Added `width: 100%` to `#customer_details` and `#order_review` |
+| Search results show homepage | No `search.php` — WordPress fell back to `index.php` | Created `search.php` |
+| Search returns all post types | Form had no `post_type` parameter | Added `<input type="hidden" name="post_type" value="product">` |
+| Live search dropdown clipped | `.search-bar` had `overflow: hidden` | Removed `overflow: hidden`, added `position: relative`, moved border-radius to button |
+| WC shop page setting overrides custom template | WC intercepts the designated shop page URL and forces archive-product.php | Leave WC shop page blank when using page-shop.php |

@@ -51,7 +51,8 @@ Tags: custom-colors, custom-menu, featured-images, theme-options, translation-re
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
