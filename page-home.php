@@ -61,7 +61,15 @@ get_header();
 }
 
 /* Info bar */
-.agt-slide-info { background: #000; padding: 28px 0; }
+.agt-slide-info {
+  background: #000;
+  width: 100%;
+  height: 110px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
 .agt-slide-info-inner {
   max-width: 1120px;
   margin: 0 auto;
@@ -70,7 +78,7 @@ get_header();
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 .agt-slide-copy { flex: 1; min-width: 0; }
 .agt-slide-headline {
@@ -594,7 +602,7 @@ get_header();
   .agt-slide-img { height: 260px; }
   .agt-slider-arrow { top: 130px; width: 40px; height: 40px; font-size: 1.3rem; }
   .agt-slider-dots { bottom: 108px; }
-  .agt-slide-info { padding: 20px 0; }
+  .agt-slide-info { height: auto; padding: 20px 0; }
   .agt-slide-info-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
   .agt-slide-headline { font-size: 1.15rem; }
   .agt-deals-grid,
