@@ -809,6 +809,9 @@ ul { list-style: none; }
   .container { padding: 0 16px; }
   .section { padding: 56px 0; }
 
+  .logo-wrapper { width: 40px; height: 40px; }
+  .site-branding .logo-mark { width: 28px; height: 28px; font-size: 0.75rem; }
+
   .navbar-inner {
     padding: 0 16px;
     flex-wrap: wrap;
@@ -854,6 +857,10 @@ ul { list-style: none; }
 }
 
 @media (max-width: 480px) {
+  .logo-wrapper { width: 35px; height: 35px; }
+  .site-branding .logo-mark { width: 24px; height: 24px; font-size: 0.65rem; }
+  .site-branding { font-size: 1rem; }
+
   .heading { font-size: 1.5rem; }
   .products-grid { grid-template-columns: 1fr; }
   .categories-grid { grid-template-columns: 1fr; }
