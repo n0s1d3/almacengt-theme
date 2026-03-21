@@ -23,7 +23,19 @@ get_header();
 
       <?php if ( have_posts() ) : ?>
 
-        <?php woocommerce_output_all_notices(); ?>
+        <?php
+        // Required: initialises $GLOBALS['woocommerce_loop'] so wc_product_class(),
+        // woocommerce_template_loop_add_to_cart(), and related functions work correctly.
+        wc_setup_loop( array(
+          'total'       => $GLOBALS['wp_query']->found_posts,
+          'total_pages' => $GLOBALS['wp_query']->max_num_pages,
+          'per_page'    => $GLOBALS['wp_query']->get( 'posts_per_page' ),
+          'current_page'=> max( 1, $GLOBALS['wp_query']->get( 'paged', 1 ) ),
+        ) );
+
+        // Fire WooCommerce before-loop hooks (notices, etc.)
+        do_action( 'woocommerce_before_shop_loop' );
+        ?>
 
         <div class="shop-controls">
           <?php woocommerce_result_count(); ?>
@@ -34,7 +46,6 @@ get_header();
           <?php
           while ( have_posts() ) :
             the_post();
-            // Explicitly set up the product object — required when bypassing woocommerce_product_loop_start()
             global $product;
             $product = wc_get_product( get_the_ID() );
             if ( $product && $product->is_visible() ) :
@@ -44,7 +55,11 @@ get_header();
           ?>
         </div>
 
-        <?php woocommerce_pagination(); ?>
+        <?php
+        do_action( 'woocommerce_after_shop_loop' );
+        wc_reset_loop();
+        woocommerce_pagination();
+        ?>
 
       <?php else : ?>
         <?php wc_get_template( 'loop/no-products-found.php' ); ?>
