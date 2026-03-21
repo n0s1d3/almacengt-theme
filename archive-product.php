@@ -24,17 +24,17 @@ get_header();
       <?php if ( have_posts() ) : ?>
 
         <?php
-        // Required: initialises $GLOBALS['woocommerce_loop'] so wc_product_class(),
-        // woocommerce_template_loop_add_to_cart(), and related functions work correctly.
+        // Initialise $GLOBALS['woocommerce_loop'] so wc_product_class() and
+        // woocommerce_template_loop_add_to_cart() work correctly.
         wc_setup_loop( array(
-          'total'       => $GLOBALS['wp_query']->found_posts,
-          'total_pages' => $GLOBALS['wp_query']->max_num_pages,
-          'per_page'    => $GLOBALS['wp_query']->get( 'posts_per_page' ),
-          'current_page'=> max( 1, $GLOBALS['wp_query']->get( 'paged', 1 ) ),
+          'total'        => $GLOBALS['wp_query']->found_posts,
+          'total_pages'  => $GLOBALS['wp_query']->max_num_pages,
+          'per_page'     => $GLOBALS['wp_query']->get( 'posts_per_page' ),
+          'current_page' => max( 1, $GLOBALS['wp_query']->get( 'paged', 1 ) ),
         ) );
 
-        // Fire WooCommerce before-loop hooks (notices, etc.)
-        do_action( 'woocommerce_before_shop_loop' );
+        // Notices only (add-to-cart confirmations, errors, etc.)
+        woocommerce_output_all_notices();
         ?>
 
         <div class="shop-controls">
@@ -49,14 +49,15 @@ get_header();
             global $product;
             $product = wc_get_product( get_the_ID() );
             if ( $product && $product->is_visible() ) :
-              wc_get_template_part( 'content', 'product' );
+              // Use WP's get_template_part — always loads the theme file,
+              // bypassing WooCommerce's template cache.
+              get_template_part( 'woocommerce/content', 'product' );
             endif;
           endwhile;
           ?>
         </div>
 
         <?php
-        do_action( 'woocommerce_after_shop_loop' );
         wc_reset_loop();
         woocommerce_pagination();
         ?>

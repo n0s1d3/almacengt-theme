@@ -44,9 +44,10 @@ get_header();
 }
 
 /* ---- Layout dos columnas ---- */
-/* WooCommerce genera: #customer_details (izq) + #order_review (der)
-   dentro de .woocommerce > form.checkout */
+/* woocommerce.css turns .woocommerce-checkout .woocommerce into a grid —
+   reset it so the wrapper is a plain block and the form controls layout. */
 .agt-checkout-page .woocommerce {
+  display: block !important;
   width: 100%;
 }
 .agt-checkout-page form.woocommerce-checkout {
@@ -62,6 +63,8 @@ get_header();
 .agt-checkout-page #customer_details {
   grid-column: 1;
   grid-row: 1;
+  /* woocommerce-layout.css sets width:48% — override so the column fills its track */
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -71,6 +74,8 @@ get_header();
 .agt-checkout-page #order_review_heading,
 .agt-checkout-page #order_review {
   grid-column: 2;
+  /* woocommerce-layout.css sets width:48% — override so the column fills its track */
+  width: 100%;
 }
 .agt-checkout-page #order_review_heading {
   grid-row: 1;
