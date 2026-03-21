@@ -48,7 +48,7 @@ get_header();
             the_post();
             global $product;
             $product = wc_get_product( get_the_ID() );
-            if ( $product && $product->is_visible() ) :
+            if ( $product && ( is_search() || $product->is_visible() ) ) :
               // Use WP's get_template_part — always loads the theme file,
               // bypassing WooCommerce's template cache.
               get_template_part( 'woocommerce/content', 'product' );

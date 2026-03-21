@@ -7,7 +7,8 @@
       "WebFetch(domain:woocommerce.com)",
       "WebFetch(domain:developer.woocommerce.com)",
       "WebFetch(domain:woocommerce.github.io)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:almacengt.com)"
     ]
   }
 }

@@ -143,8 +143,12 @@ The `<aside class="shop-sidebar">` wrapper is provided by `archive-product.php`.
 ### 5. `ul.products` is hidden
 `woocommerce.css` hides `.woocommerce ul.products { display: none !important }` because we use a custom `.products-grid` div. Related/upsell products override this with higher-specificity `display: grid !important`.
 
-### 6. `woocommerce.php` is the fallback for non-custom WC pages
-Account, order confirmation route through `woocommerce.php`, which wraps `woocommerce_content()` in `.container`. Cart and checkout have their own custom templates now.
+### 6. `woocommerce.php` — priority trap with product archives
+WooCommerce's template loader checks `woocommerce.php` **before** `archive-product.php` for every WooCommerce page type (product archives, searches, cart, account, etc.). Because our theme has `woocommerce.php`, it would always win and call `woocommerce_content()` — outputting the default `ul.products` loop which our CSS then hides.
+
+**Fix in place:** `woocommerce.php` has an early-exit at the top that hands off to `archive-product.php` for `is_post_type_archive('product')`, `is_product_taxonomy()`, and `is_search()` + `post_type=product`. Account and order confirmation still go through `woocommerce.php` normally.
+
+**Do NOT remove that early-exit block** — without it, all search and archive pages silently revert to the default WooCommerce loop, hidden by our own CSS.
 
 ### 7. `page.php` exists as a safety net
 Prevents WordPress static pages from falling back to `index.php` (which would show the homepage hero/deals layout on every page).

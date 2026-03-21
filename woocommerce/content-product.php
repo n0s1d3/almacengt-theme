@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 
 global $product;
 
-if ( empty( $product ) || ! $product->is_visible() ) {
+if ( empty( $product ) || ( ! is_search() && ! $product->is_visible() ) ) {
     return;
 }
 ?>

@@ -26,65 +26,133 @@ get_header();
 .agt-home img { max-width: 100%; height: auto; display: block; }
 .agt-home ul { list-style: none; margin: 0; padding: 0; }
 
-/* --- Hero ------------------------------------------------- */
-.agt-hero {
-  background: linear-gradient(135deg, var(--primary) 0%, #1e3a6e 60%, #0d6e6e 100%);
-  min-height: 320px;
+/* --- Hero promotional slider ----------------------------- */
+.agt-hero-banner { position: relative; overflow: hidden; user-select: none; }
+.agt-slide { display: none; width: 100%; }
+.agt-slide.is-active { display: block; }
+
+/* Image area */
+.agt-slide-img {
+  height: 380px;
+  background-size: cover;
+  background-position: center;
   display: flex;
-  align-items: center;
-  overflow: hidden;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 36px;
   position: relative;
 }
-.agt-hero::after {
+.agt-slide-img::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 50%, rgba(0,0,0,0.35) 100%);
   pointer-events: none;
 }
-.agt-hero .container {
-  position: relative;
+.agt-slide-brand {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,.55);
   z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 48px;
-  padding: 48px 24px;
-  width: 100%;
+  position: relative;
+}
+
+/* Info bar */
+.agt-slide-info { background: #000; padding: 28px 0; }
+.agt-slide-info-inner {
   max-width: 1120px;
   margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
 }
-.agt-hero-badge {
+.agt-slide-copy { flex: 1; min-width: 0; }
+.agt-slide-headline {
+  color: #fff;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+.agt-slide-sub {
+  color: rgba(255,255,255,.72);
+  font-size: 0.92rem;
+  margin: 0 0 4px;
+  line-height: 1.5;
+}
+.agt-slide-terms {
+  color: rgba(255,255,255,.35);
+  font-size: 0.75rem;
+  margin: 0;
+}
+.agt-slide-cta {
+  display: inline-block;
   background: var(--accent);
   color: #000;
-  font-weight: 900;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 6px 14px;
-  border-radius: 2px;
-  display: inline-block;
-  margin-bottom: 16px;
-}
-.agt-hero-text { flex: 1; }
-.agt-hero-text h1 {
-  color: #fff;
-  font-size: clamp(28px, 4vw, 48px);
-  font-weight: 900;
-  line-height: 1.15;
-  margin: 0 0 12px;
-}
-.agt-hero-text p {
-  color: rgba(255,255,255,.75);
-  font-size: 18px;
-  margin: 0 0 8px;
-}
-.agt-hero-deadline {
-  color: var(--accent);
+  font-size: 0.95rem;
   font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 28px !important;
+  padding: 13px 32px;
+  border-radius: 4px;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background .2s, transform .1s;
+  border: none;
+  cursor: pointer;
 }
-.agt-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.agt-slide-cta:hover { background: var(--accent-light); transform: translateY(-1px); color: #000; }
+
+/* Arrows */
+.agt-slider-arrow {
+  position: absolute;
+  top: 190px;
+  transform: translateY(-50%);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.45);
+  color: #fff;
+  border: 2px solid rgba(255,255,255,.35);
+  font-size: 1.6rem;
+  cursor: pointer;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, border-color .2s;
+  line-height: 1;
+}
+.agt-slider-arrow:hover { background: rgba(0,0,0,.75); border-color: #fff; }
+.agt-slider-prev { left: 16px; }
+.agt-slider-next { right: 16px; }
+
+/* Dots */
+.agt-slider-dots {
+  position: absolute;
+  bottom: 148px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+}
+.agt-slider-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.4);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background .2s, transform .2s;
+}
+.agt-slider-dot.is-active { background: #fff; transform: scale(1.4); }
+
+/* Buttons (keep for rest of page) */
 .agt-btn {
   display: inline-flex;
   align-items: center;
@@ -96,27 +164,16 @@ get_header();
   cursor: pointer;
   transition: filter .15s, transform .1s;
   border: none;
+  text-decoration: none;
 }
 .agt-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
 .agt-btn-primary { background: var(--accent); color: #000; }
 .agt-btn-outline {
-  background: transparent;
+  background: rgba(255,255,255,.12);
   color: #fff;
-  border: 2px solid rgba(255,255,255,.5);
+  border: 2px solid #fff;
 }
-.agt-btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.08); }
-.agt-hero-image {
-  flex-shrink: 0;
-  width: 280px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.agt-hero-image img {
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.4);
-}
+.agt-btn-outline:hover { background: #fff; color: var(--primary); }
 
 /* --- Section titles --------------------------------------- */
 .agt-section-title {
@@ -409,6 +466,90 @@ get_header();
   font-size: 14px;
 }
 
+/* --- Mid-page promo banner ------------------------------- */
+.agt-promo-block {
+  background: #fff;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  overflow: hidden;
+  padding: 64px 24px 0;
+}
+.agt-promo-block-inner {
+  max-width: 580px;
+  margin: 0 auto;
+}
+.agt-promo-block-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.agt-promo-block-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  color: var(--text);
+  margin: 0 0 16px;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+.agt-promo-block-sub {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0 0 8px;
+}
+.agt-promo-block-terms {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin: 0 0 28px;
+}
+.agt-promo-block-cta {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 40px;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-bottom: 48px;
+  transition: background 0.2s, transform 0.1s;
+}
+.agt-promo-block-cta:hover {
+  background: #1e3a6e;
+  color: #fff;
+  transform: translateY(-1px);
+}
+.agt-promo-block-img {
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.agt-promo-block-img img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.1);
+}
+/* Brand attribution below image */
+.agt-promo-block-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
 /* --- Responsive ------------------------------------------ */
 @media (max-width: 1024px) {
   .agt-deals-grid,
@@ -416,19 +557,24 @@ get_header();
   .agt-products-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 768px) {
-  .agt-hero .container { flex-direction: column; text-align: center; }
-  .agt-hero-image { width: 200px; }
-  .agt-hero-actions { justify-content: center; }
+  .agt-slide-img { height: 260px; }
+  .agt-slider-arrow { top: 130px; width: 40px; height: 40px; font-size: 1.3rem; }
+  .agt-slider-dots { bottom: 108px; }
+  .agt-slide-info { padding: 20px 0; }
+  .agt-slide-info-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .agt-slide-headline { font-size: 1.15rem; }
   .agt-deals-grid,
   .agt-tiles-grid,
   .agt-products-grid { grid-template-columns: repeat(2, 1fr); }
   .agt-cat-item { min-width: 96px; }
 }
 @media (max-width: 480px) {
+  .agt-slide-img { height: 200px; }
+  .agt-slider-arrow { display: none; }
+  .agt-slider-dots { bottom: 92px; }
   .agt-deals-grid,
   .agt-tiles-grid,
   .agt-products-grid { grid-template-columns: 1fr; }
-  .agt-hero-text h1 { font-size: 26px; }
 }
 </style>
 
@@ -436,39 +582,86 @@ get_header();
 
   <?php
   /* ========================================================
-     1. HERO BANNER
-     Edita el contenido desde aquí o usa ACF si prefieres
-     campos dinámicos.
+     1. HERO — promotional banner carousel
+     ─────────────────────────────────────────────────────────
+     Edit $agt_slides to change banners.
+     'image' → URL from WP Admin → Media Library.
+     Leave 'image' empty to show the gradient background only.
      ======================================================== */
-  $hero_title    = get_theme_mod( 'agt_hero_title', 'Las mejores ofertas en tecnología están aquí' );
-  $hero_subtitle = get_theme_mod( 'agt_hero_subtitle', 'Laptops, celulares, televisores y mucho más.' );
-  $hero_badge    = get_theme_mod( 'agt_hero_badge', 'Temporada de ofertas' );
-  $hero_deadline = get_theme_mod( 'agt_hero_deadline', 'Solo hasta el domingo' );
-  $hero_url      = get_theme_mod( 'agt_hero_url', wc_get_page_permalink( 'shop' ) );
-  $hero_img      = get_theme_mod( 'agt_hero_image', '' );
+  $shop_url   = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
+  $agt_slides = [
+    [
+      'brand'    => 'AlmacenGT',
+      'image'    => '', // paste full URL from Media Library
+      'bg'       => 'linear-gradient(135deg,#14213d 0%,#1e3a6e 100%)',
+      'headline' => __( 'Tecnología y electrónica al mejor precio en Guatemala', 'almacengt' ),
+      'subline'  => __( 'Miles de productos. Envío rápido a toda Guatemala. Garantía real.', 'almacengt' ),
+      'terms'    => '',
+      'cta'      => __( 'Ver todas las ofertas', 'almacengt' ),
+      'url'      => $shop_url,
+    ],
+    [
+      'brand'    => 'Smartphones',
+      'image'    => '', // paste full URL from Media Library
+      'bg'       => 'linear-gradient(135deg,#2d1b4e 0%,#4a2070 100%)',
+      'headline' => __( 'Los mejores celulares desde Q1,299', 'almacengt' ),
+      'subline'  => __( 'Samsung, iPhone, Xiaomi y más. Envío gratis en compras mayores a Q499.', 'almacengt' ),
+      'terms'    => __( '*Sujeto a disponibilidad de stock.', 'almacengt' ),
+      'cta'      => __( 'Ver celulares', 'almacengt' ),
+      'url'      => $shop_url,
+    ],
+    [
+      'brand'    => 'Computadoras',
+      'image'    => '', // paste full URL from Media Library
+      'bg'       => 'linear-gradient(135deg,#0d2137 0%,#1a3a5c 100%)',
+      'headline' => __( 'Laptops y PCs desde Q2,499', 'almacengt' ),
+      'subline'  => __( 'Intel, AMD y Apple. El equipo que necesitas al precio que mereces.', 'almacengt' ),
+      'terms'    => __( '*Precios sujetos a cambio sin previo aviso.', 'almacengt' ),
+      'cta'      => __( 'Ver computadoras', 'almacengt' ),
+      'url'      => $shop_url,
+    ],
+  ];
   ?>
-  <section class="agt-hero">
-    <div class="container">
-      <div class="agt-hero-text">
-        <span class="agt-hero-badge"><?php echo esc_html( $hero_badge ); ?></span>
-        <h1><?php echo esc_html( $hero_title ); ?></h1>
-        <p><?php echo esc_html( $hero_subtitle ); ?></p>
-        <p class="agt-hero-deadline"><?php echo esc_html( $hero_deadline ); ?></p>
-        <div class="agt-hero-actions">
-          <a href="<?php echo esc_url( $hero_url ); ?>" class="agt-btn agt-btn-primary">
-            <?php esc_html_e( 'Ver ofertas', 'almacengt' ); ?>
-          </a>
-          <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="agt-btn agt-btn-outline">
-            <?php esc_html_e( 'Explorar tienda', 'almacengt' ); ?>
-          </a>
+  <section class="agt-hero-banner" aria-label="<?php esc_attr_e( 'Ofertas destacadas', 'almacengt' ); ?>">
+    <div id="agt-hero-slider">
+      <?php foreach ( $agt_slides as $i => $s ) : ?>
+      <div class="agt-slide<?php echo $i === 0 ? ' is-active' : ''; ?>"
+           style="background:<?php echo esc_attr( $s['bg'] ); ?>;">
+        <div class="agt-slide-img"
+             <?php if ( $s['image'] ) : ?>style="background-image:url('<?php echo esc_url( $s['image'] ); ?>')"<?php endif; ?>>
+          <span class="agt-slide-brand"><?php echo esc_html( $s['brand'] ); ?></span>
+        </div>
+        <div class="agt-slide-info">
+          <div class="agt-slide-info-inner">
+            <div class="agt-slide-copy">
+              <h2 class="agt-slide-headline"><?php echo esc_html( $s['headline'] ); ?></h2>
+              <p class="agt-slide-sub"><?php echo esc_html( $s['subline'] ); ?></p>
+              <?php if ( $s['terms'] ) : ?>
+                <p class="agt-slide-terms"><?php echo esc_html( $s['terms'] ); ?></p>
+              <?php endif; ?>
+            </div>
+            <a href="<?php echo esc_url( $s['url'] ); ?>" class="agt-slide-cta">
+              <?php echo esc_html( $s['cta'] ); ?>
+            </a>
+          </div>
         </div>
       </div>
-      <?php if ( $hero_img ) : ?>
-      <div class="agt-hero-image">
-        <img src="<?php echo esc_url( $hero_img ); ?>" alt="<?php echo esc_attr( $hero_title ); ?>">
-      </div>
-      <?php endif; ?>
+      <?php endforeach; ?>
     </div>
+
+    <?php if ( count( $agt_slides ) > 1 ) : ?>
+    <button class="agt-slider-arrow agt-slider-prev" aria-label="<?php esc_attr_e( 'Anterior', 'almacengt' ); ?>">&#8249;</button>
+    <button class="agt-slider-arrow agt-slider-next" aria-label="<?php esc_attr_e( 'Siguiente', 'almacengt' ); ?>">&#8250;</button>
+    <div class="agt-slider-dots" role="tablist">
+      <?php foreach ( $agt_slides as $i => $s ) : ?>
+      <button class="agt-slider-dot<?php echo $i === 0 ? ' is-active' : ''; ?>"
+              data-slide="<?php echo $i; ?>"
+              role="tab"
+              aria-selected="<?php echo $i === 0 ? 'true' : 'false'; ?>"
+              aria-label="<?php printf( esc_attr__( 'Slide %d', 'almacengt' ), $i + 1 ); ?>"></button>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
   </section>
 
   <?php
@@ -708,6 +901,53 @@ get_header();
     </div>
   </section>
   <?php endif; ?>
+
+  <?php
+  /* ========================================================
+     6. MID-PAGE PROMO BANNER
+     ─────────────────────────────────────────────────────────
+     Edit $agt_promo below to change the content.
+     'image' → upload to Media Library, paste URL here.
+     Leave 'image' empty to hide the image area.
+     ======================================================== */
+  $agt_promo = [
+    'label'  => __( 'Nuevo en AlmacenGT', 'almacengt' ),
+    'title'  => __( 'Bienvenido, Guatemala.', 'almacengt' ),
+    'sub'    => __( 'Desde Q2,499. Encuentra la tecnología que necesitas al precio que mereces. Envío rápido a todo el país.', 'almacengt' ),
+    'terms'  => __( 'Aplican condiciones. Sujeto a disponibilidad de stock.', 'almacengt' ),
+    'cta'    => __( 'Ver ahora', 'almacengt' ),
+    'url'    => $shop_url,
+    'image'  => '', // paste URL from WP Admin → Media Library
+    'brand'  => '', // optional brand line, e.g. "MacBook Neo" (leave blank to hide)
+  ];
+  ?>
+  <section class="agt-promo-block">
+    <div class="agt-promo-block-inner">
+      <?php if ( $agt_promo['label'] ) : ?>
+        <span class="agt-promo-block-label"><?php echo esc_html( $agt_promo['label'] ); ?></span>
+      <?php endif; ?>
+      <h2 class="agt-promo-block-title"><?php echo esc_html( $agt_promo['title'] ); ?></h2>
+      <p class="agt-promo-block-sub"><?php echo esc_html( $agt_promo['sub'] ); ?></p>
+      <?php if ( $agt_promo['terms'] ) : ?>
+        <p class="agt-promo-block-terms"><?php echo esc_html( $agt_promo['terms'] ); ?></p>
+      <?php endif; ?>
+      <a href="<?php echo esc_url( $agt_promo['url'] ); ?>" class="agt-promo-block-cta">
+        <?php echo esc_html( $agt_promo['cta'] ); ?>
+      </a>
+    </div>
+    <?php if ( $agt_promo['image'] ) : ?>
+    <div class="agt-promo-block-img">
+      <img src="<?php echo esc_url( $agt_promo['image'] ); ?>"
+           alt="<?php echo esc_attr( $agt_promo['title'] ); ?>"
+           loading="lazy">
+    </div>
+    <?php if ( $agt_promo['brand'] ) : ?>
+    <div class="agt-promo-block-brand">
+      <?php echo esc_html( $agt_promo['brand'] ); ?>
+    </div>
+    <?php endif; ?>
+    <?php endif; ?>
+  </section>
 
 </main>
 

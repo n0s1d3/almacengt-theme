@@ -63,8 +63,10 @@ get_header();
 .agt-checkout-page #customer_details {
   grid-column: 1;
   grid-row: 1;
-  /* woocommerce-layout.css sets width:48% — override so the column fills its track */
-  width: 100%;
+  /* woocommerce-layout.css sets width:48% with !important — must match */
+  width: 100% !important;
+  max-width: 100% !important;
+  float: none !important;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -74,8 +76,10 @@ get_header();
 .agt-checkout-page #order_review_heading,
 .agt-checkout-page #order_review {
   grid-column: 2;
-  /* woocommerce-layout.css sets width:48% — override so the column fills its track */
-  width: 100%;
+  /* woocommerce-layout.css sets width:48% with !important — must match */
+  width: 100% !important;
+  max-width: 100% !important;
+  float: none !important;
 }
 .agt-checkout-page #order_review_heading {
   grid-row: 1;
@@ -199,6 +203,13 @@ get_header();
 .agt-checkout-page .select2-container--default .select2-selection--single .select2-selection__arrow {
   top: 10px !important;
   right: 10px !important;
+}
+
+/* Reset WooCommerce float layout inside customer_details */
+.agt-checkout-page #customer_details .col-1,
+.agt-checkout-page #customer_details .col-2 {
+  width: 100% !important;
+  float: none !important;
 }
 
 /* Form row half-width (nombre / apellido) */

@@ -33,6 +33,7 @@
       <input type="search" name="s"
              placeholder="<?php esc_attr_e( 'Buscar productos...', 'almacengt' ); ?>"
              value="<?php echo esc_attr( get_search_query() ); ?>"
+             maxlength="100"
              autocomplete="off">
       <button type="submit" aria-label="<?php esc_attr_e( 'Buscar', 'almacengt' ); ?>">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -72,5 +73,29 @@
     </nav>
   </div>
 </header>
+
+<!-- Secondary nav — category quick links -->
+<nav class="subnav" aria-label="<?php esc_attr_e( 'Categorías', 'almacengt' ); ?>">
+  <div class="container subnav-inner">
+    <?php
+    $subnav_cats = get_terms( [
+      'taxonomy'   => 'product_cat',
+      'hide_empty' => true,
+      'number'     => 8,
+      'orderby'    => 'count',
+      'order'      => 'DESC',
+    ] );
+    if ( ! empty( $subnav_cats ) && ! is_wp_error( $subnav_cats ) ) :
+      foreach ( $subnav_cats as $sncat ) : ?>
+        <a href="<?php echo esc_url( get_term_link( $sncat ) ); ?>" class="subnav-link">
+          <?php echo esc_html( $sncat->name ); ?>
+        </a>
+      <?php endforeach;
+    endif; ?>
+    <a href="<?php echo esc_url( home_url( '/?post_type=product' ) ); ?>" class="subnav-link subnav-link--accent">
+      <?php esc_html_e( 'Ofertas del Día', 'almacengt' ); ?>
+    </a>
+  </div>
+</nav>
 
 <main>
