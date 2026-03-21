@@ -237,14 +237,14 @@ get_header();
 .agt-cats-prev { left: 4px; }
 .agt-cats-next { right: 4px; }
 .agt-cats-scroll {
+  overflow: hidden;
+  cursor: default;
+}
+.agt-cats-marquee {
   display: flex;
   gap: 12px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding-bottom: 4px;
+  will-change: transform;
 }
-.agt-cats-scroll::-webkit-scrollbar { display: none; }
 .agt-cat-item {
   display: flex;
   flex-direction: column;
@@ -633,7 +633,7 @@ get_header();
   $shop_url   = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
   $agt_slides = [
     [
-      'brand'    => 'AlmacenGT',
+      'brand'    => '',
       'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_bal623bal623bal6.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#14213d 0%,#1e3a6e 100%)',
       'headline' => __( 'Tecnología y electrónica al mejor precio en Guatemala', 'almacengt' ),
@@ -643,7 +643,7 @@ get_header();
       'url'      => $shop_url,
     ],
     [
-      'brand'    => 'Smartphones',
+      'brand'    => '',
       'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_6coxsk6coxsk6cox.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#2d1b4e 0%,#4a2070 100%)',
       'headline' => __( 'Los mejores celulares desde Q1,299', 'almacengt' ),
@@ -653,7 +653,7 @@ get_header();
       'url'      => $shop_url,
     ],
     [
-      'brand'    => 'Computadoras',
+      'brand'    => '',
       'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_6oma8l6oma8l6oma.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#0d2137 0%,#1a3a5c 100%)',
       'headline' => __( 'Laptops y PCs desde Q2,499', 'almacengt' ),

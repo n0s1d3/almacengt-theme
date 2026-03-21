@@ -67,66 +67,82 @@
   // index.php slider (hp-* classes, fallback)
   initSlider('hp-hero-slider', '.hp-slider-prev', '.hp-slider-next', '.hp-slider-dot');
 
-  // ── Category strip carousel ───────────────────────────────────────────
+  // ── Category strip — continuous marquee ──────────────────────────────
   (function () {
     var track = document.getElementById('agt-cats-track');
     if (!track) return;
 
-    var prev  = document.querySelector('.agt-cats-prev');
-    var next  = document.querySelector('.agt-cats-next');
-    var AUTO_MS = 3500;
-    var timer;
+    var original = Array.from(track.querySelectorAll('.agt-cat-item'));
+    if (!original.length) return;
 
-    function itemWidth() {
-      var first = track.querySelector('.agt-cat-item');
-      if (!first) return 120;
-      var style = window.getComputedStyle(track);
-      var gap = parseFloat(style.gap) || 12;
-      return first.offsetWidth + gap;
+    // Build inner marquee wrapper with original + cloned items
+    var marquee = document.createElement('div');
+    marquee.className = 'agt-cats-marquee';
+    original.forEach(function (el) { marquee.appendChild(el); });
+    original.forEach(function (el) { marquee.appendChild(el.cloneNode(true)); });
+    track.appendChild(marquee);
+
+    var SPEED    = 0.5;   // px per frame — adjust for faster/slower scroll
+    var pos      = 0;
+    var halfW    = 1;
+    var paused   = false;
+
+    // Calculate width of one full set of original items
+    function calcHalf() {
+      var gap = parseFloat(window.getComputedStyle(marquee).gap) || 12;
+      var w   = 0;
+      original.forEach(function (el) { w += el.offsetWidth + gap; });
+      halfW = w;
     }
 
-    function advance() {
-      var iw = itemWidth();
-      var atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - iw;
-      if (atEnd) {
-        track.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        track.scrollBy({ left: iw, behavior: 'smooth' });
+    function tick() {
+      if (!paused) {
+        pos += SPEED;
+        if (pos >= halfW) pos -= halfW;   // seamless reset
+        marquee.style.transform = 'translateX(-' + pos + 'px)';
       }
+      requestAnimationFrame(tick);
     }
 
-    function retreat() {
-      var iw = itemWidth();
-      if (track.scrollLeft <= 0) {
-        track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
-      } else {
-        track.scrollBy({ left: -iw, behavior: 'smooth' });
-      }
-    }
+    // Pause on hover
+    track.addEventListener('mouseenter', function () { paused = true; });
+    track.addEventListener('mouseleave', function () { paused = false; });
 
-    function resetTimer() {
-      clearInterval(timer);
-      timer = setInterval(advance, AUTO_MS);
-    }
-
-    if (next) next.addEventListener('click', function () { advance(); resetTimer(); });
-    if (prev) prev.addEventListener('click', function () { retreat(); resetTimer(); });
-
-    track.addEventListener('mouseenter', function () { clearInterval(timer); });
-    track.addEventListener('mouseleave', resetTimer);
-
-    var touchStartX = 0;
+    // Touch drag
+    var txStart = 0;
     track.addEventListener('touchstart', function (e) {
-      touchStartX = e.touches[0].clientX;
-      clearInterval(timer);
+      txStart  = e.touches[0].clientX;
+      paused   = true;
     }, { passive: true });
-    track.addEventListener('touchend', function (e) {
-      var diff = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 32) { diff > 0 ? advance() : retreat(); }
-      resetTimer();
+    track.addEventListener('touchmove', function (e) {
+      var diff = txStart - e.touches[0].clientX;
+      txStart  = e.touches[0].clientX;
+      pos = ((pos + diff) % halfW + halfW) % halfW;
+      marquee.style.transform = 'translateX(-' + pos + 'px)';
     }, { passive: true });
+    track.addEventListener('touchend', function () { paused = false; }, { passive: true });
 
-    resetTimer();
+    // Arrow buttons — skip one item forward/back instantly
+    var prevBtn = document.querySelector('.agt-cats-prev');
+    var nextBtn = document.querySelector('.agt-cats-next');
+
+    function itemW() {
+      var el  = marquee.querySelector('.agt-cat-item');
+      var gap = parseFloat(window.getComputedStyle(marquee).gap) || 12;
+      return el ? el.offsetWidth + gap : 120;
+    }
+
+    if (nextBtn) nextBtn.addEventListener('click', function () {
+      pos = (pos + itemW()) % halfW;
+    });
+    if (prevBtn) prevBtn.addEventListener('click', function () {
+      pos = ((pos - itemW()) % halfW + halfW) % halfW;
+    });
+
+    window.addEventListener('resize', calcHalf);
+
+    // Start after layout is ready
+    requestAnimationFrame(function () { calcHalf(); tick(); });
   }());
 
   // ── Subnav dropdowns — tap to open on touch devices ──────────────────
