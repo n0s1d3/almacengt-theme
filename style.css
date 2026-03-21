@@ -257,12 +257,20 @@ ul { list-style: none; }
   color: rgba(255,255,255,0.75);
 }
 
-.navbar {
-  background: var(--primary);
-  border-bottom: none;
+.site-header {
   position: sticky;
   top: 0;
   z-index: 100;
+}
+/* Offset for WordPress admin bar */
+body.admin-bar .site-header { top: 32px; }
+@media (max-width: 782px) {
+  body.admin-bar .site-header { top: 46px; }
+}
+
+.navbar {
+  background: var(--primary);
+  border-bottom: none;
   padding: 12px 0;
 }
 
@@ -298,6 +306,51 @@ ul { list-style: none; }
   font-weight: 700;
 }
 .subnav-link--accent:hover { color: var(--accent-light); background: rgba(252,163,17,0.1); }
+
+/* ── Subnav dropdown ── */
+.subnav-item {
+  position: relative;
+  display: inline-flex;
+}
+.subnav-link--parent {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.subnav-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.subnav-item:hover .subnav-chevron,
+.subnav-item.is-open .subnav-chevron { transform: rotate(180deg); }
+
+.subnav-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background: #0d1a33;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  padding: 6px 0;
+  z-index: 200;
+}
+.subnav-item:hover .subnav-dropdown,
+.subnav-item.is-open .subnav-dropdown { display: block; }
+
+.subnav-drop-link {
+  display: block;
+  padding: 8px 16px;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.82rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.subnav-drop-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
 
 .navbar-inner {
   max-width: 1120px;

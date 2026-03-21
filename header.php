@@ -16,6 +16,7 @@
   </div>
 </div>
 
+<div class="site-header">
 <header class="navbar">
   <div class="navbar-inner">
     <!-- Logo + site name -->
@@ -84,18 +85,43 @@
       'number'     => 8,
       'orderby'    => 'count',
       'order'      => 'DESC',
+      'parent'     => 0,
     ] );
     if ( ! empty( $subnav_cats ) && ! is_wp_error( $subnav_cats ) ) :
-      foreach ( $subnav_cats as $sncat ) : ?>
-        <a href="<?php echo esc_url( get_term_link( $sncat ) ); ?>" class="subnav-link">
-          <?php echo esc_html( $sncat->name ); ?>
-        </a>
-      <?php endforeach;
+      foreach ( $subnav_cats as $sncat ) :
+        $children = get_terms( [
+          'taxonomy'   => 'product_cat',
+          'hide_empty' => true,
+          'parent'     => $sncat->term_id,
+          'orderby'    => 'name',
+          'order'      => 'ASC',
+        ] );
+        if ( ! empty( $children ) && ! is_wp_error( $children ) ) : ?>
+          <div class="subnav-item">
+            <a href="<?php echo esc_url( get_term_link( $sncat ) ); ?>" class="subnav-link subnav-link--parent">
+              <?php echo esc_html( $sncat->name ); ?>
+              <svg class="subnav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </a>
+            <div class="subnav-dropdown">
+              <?php foreach ( $children as $child ) : ?>
+                <a href="<?php echo esc_url( get_term_link( $child ) ); ?>" class="subnav-drop-link">
+                  <?php echo esc_html( $child->name ); ?>
+                </a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php else : ?>
+          <a href="<?php echo esc_url( get_term_link( $sncat ) ); ?>" class="subnav-link">
+            <?php echo esc_html( $sncat->name ); ?>
+          </a>
+        <?php endif;
+      endforeach;
     endif; ?>
     <a href="<?php echo esc_url( home_url( '/?post_type=product' ) ); ?>" class="subnav-link subnav-link--accent">
       <?php esc_html_e( 'Ofertas del Día', 'almacengt' ); ?>
     </a>
   </div>
 </nav>
+</div><!-- /.site-header -->
 
 <main>

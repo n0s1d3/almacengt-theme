@@ -67,4 +67,33 @@
   // index.php slider (hp-* classes, fallback)
   initSlider('hp-hero-slider', '.hp-slider-prev', '.hp-slider-next', '.hp-slider-dot');
 
+  // ── Subnav dropdowns — tap to open on touch devices ──────────────────
+  var isTouch = window.matchMedia('(hover: none)').matches;
+
+  document.querySelectorAll('.subnav-link--parent').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      if (!isTouch) return; // desktop: CSS hover handles it
+      var item = link.closest('.subnav-item');
+      var wasOpen = item.classList.contains('is-open');
+      // close all open dropdowns
+      document.querySelectorAll('.subnav-item.is-open').forEach(function (el) {
+        el.classList.remove('is-open');
+      });
+      if (!wasOpen) {
+        e.preventDefault(); // first tap: open dropdown, don't navigate
+        item.classList.add('is-open');
+      }
+      // second tap (wasOpen): let the link navigate normally
+    });
+  });
+
+  // close dropdowns when tapping outside
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.subnav-item')) {
+      document.querySelectorAll('.subnav-item.is-open').forEach(function (el) {
+        el.classList.remove('is-open');
+      });
+    }
+  });
+
 }());

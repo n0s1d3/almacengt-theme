@@ -592,7 +592,7 @@ get_header();
   $agt_slides = [
     [
       'brand'    => 'AlmacenGT',
-      'image'    => '', // paste full URL from Media Library
+      'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_bal623bal623bal6.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#14213d 0%,#1e3a6e 100%)',
       'headline' => __( 'Tecnología y electrónica al mejor precio en Guatemala', 'almacengt' ),
       'subline'  => __( 'Miles de productos. Envío rápido a toda Guatemala. Garantía real.', 'almacengt' ),
@@ -602,7 +602,7 @@ get_header();
     ],
     [
       'brand'    => 'Smartphones',
-      'image'    => '', // paste full URL from Media Library
+      'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_6coxsk6coxsk6cox.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#2d1b4e 0%,#4a2070 100%)',
       'headline' => __( 'Los mejores celulares desde Q1,299', 'almacengt' ),
       'subline'  => __( 'Samsung, iPhone, Xiaomi y más. Envío gratis en compras mayores a Q499.', 'almacengt' ),
@@ -612,7 +612,7 @@ get_header();
     ],
     [
       'brand'    => 'Computadoras',
-      'image'    => '', // paste full URL from Media Library
+      'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_6oma8l6oma8l6oma.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#0d2137 0%,#1a3a5c 100%)',
       'headline' => __( 'Laptops y PCs desde Q2,499', 'almacengt' ),
       'subline'  => __( 'Intel, AMD y Apple. El equipo que necesitas al precio que mereces.', 'almacengt' ),
