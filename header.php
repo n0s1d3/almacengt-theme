@@ -110,10 +110,6 @@
               <?php endforeach; ?>
             </div>
           </div>
-        <?php else : ?>
-          <a href="<?php echo esc_url( get_term_link( $sncat ) ); ?>" class="subnav-link">
-            <?php echo esc_html( $sncat->name ); ?>
-          </a>
         <?php endif;
       endforeach;
     endif; ?>

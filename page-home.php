@@ -192,8 +192,42 @@ get_header();
 .agt-cats-inner {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 48px;
+  position: relative;
 }
+/* Fade edges */
+.agt-cats-inner::before,
+.agt-cats-inner::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 48px;
+  z-index: 5;
+  pointer-events: none;
+}
+.agt-cats-inner::before { left: 48px; background: linear-gradient(to right, #fff, transparent); }
+.agt-cats-inner::after  { right: 48px; background: linear-gradient(to left, #fff, transparent); }
+/* Arrow buttons */
+.agt-cats-arrow {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  z-index: 10;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  color: var(--primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  padding: 0;
+}
+.agt-cats-arrow:hover { background: var(--primary); color: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+.agt-cats-prev { left: 4px; }
+.agt-cats-next { right: 4px; }
 .agt-cats-scroll {
   display: flex;
   gap: 12px;
@@ -682,7 +716,8 @@ get_header();
   ?>
   <section class="agt-cats-wrap">
     <div class="agt-cats-inner">
-      <div class="agt-cats-scroll">
+      <button class="agt-cats-arrow agt-cats-prev" aria-label="<?php esc_attr_e( 'Anterior', 'almacengt' ); ?>">&#8249;</button>
+      <div class="agt-cats-scroll" id="agt-cats-track">
         <?php foreach ( $product_cats as $cat ) :
           $thumbnail_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
           $image_url    = $thumbnail_id
@@ -700,6 +735,7 @@ get_header();
         </a>
         <?php endforeach; ?>
       </div>
+      <button class="agt-cats-arrow agt-cats-next" aria-label="<?php esc_attr_e( 'Siguiente', 'almacengt' ); ?>">&#8250;</button>
     </div>
   </section>
   <?php endif; ?>

@@ -67,6 +67,68 @@
   // index.php slider (hp-* classes, fallback)
   initSlider('hp-hero-slider', '.hp-slider-prev', '.hp-slider-next', '.hp-slider-dot');
 
+  // ── Category strip carousel ───────────────────────────────────────────
+  (function () {
+    var track = document.getElementById('agt-cats-track');
+    if (!track) return;
+
+    var prev  = document.querySelector('.agt-cats-prev');
+    var next  = document.querySelector('.agt-cats-next');
+    var AUTO_MS = 3500;
+    var timer;
+
+    function itemWidth() {
+      var first = track.querySelector('.agt-cat-item');
+      if (!first) return 120;
+      var style = window.getComputedStyle(track);
+      var gap = parseFloat(style.gap) || 12;
+      return first.offsetWidth + gap;
+    }
+
+    function advance() {
+      var iw = itemWidth();
+      var atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - iw;
+      if (atEnd) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: iw, behavior: 'smooth' });
+      }
+    }
+
+    function retreat() {
+      var iw = itemWidth();
+      if (track.scrollLeft <= 0) {
+        track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: -iw, behavior: 'smooth' });
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(advance, AUTO_MS);
+    }
+
+    if (next) next.addEventListener('click', function () { advance(); resetTimer(); });
+    if (prev) prev.addEventListener('click', function () { retreat(); resetTimer(); });
+
+    track.addEventListener('mouseenter', function () { clearInterval(timer); });
+    track.addEventListener('mouseleave', resetTimer);
+
+    var touchStartX = 0;
+    track.addEventListener('touchstart', function (e) {
+      touchStartX = e.touches[0].clientX;
+      clearInterval(timer);
+    }, { passive: true });
+    track.addEventListener('touchend', function (e) {
+      var diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 32) { diff > 0 ? advance() : retreat(); }
+      resetTimer();
+    }, { passive: true });
+
+    resetTimer();
+  }());
+
   // ── Subnav dropdowns — tap to open on touch devices ──────────────────
   var isTouch = window.matchMedia('(hover: none)').matches;
 
