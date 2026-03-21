@@ -333,8 +333,8 @@ ul { list-style: none; }
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  width: 50px;
-  height: 50px;
+  width: 35px;
+  height: 35px;
   transition: all 0.3s ease;
 }
 
@@ -346,24 +346,25 @@ ul { list-style: none; }
 }
 
 @media (min-width: 768px) {
-  .logo-wrapper { width: 60px; height: 60px; }
+  .logo-wrapper { width: 38px; height: 38px; }
 }
 
 @media (min-width: 1024px) {
-  .logo-wrapper { width: 70px; height: 70px; }
+  .logo-wrapper { width: 50px; height: 50px; }
+  .site-branding .logo-mark { width: 36px; height: 36px; font-size: 0.9rem; }
 }
 
 .site-branding .logo-mark {
-  width: 36px;
-  height: 36px;
+  width: 26px;
+  height: 26px;
   background: var(--accent);
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #000000;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.72rem;
 }
 
 .main-nav ul {
@@ -1092,8 +1093,8 @@ ul { list-style: none; }
   .container { padding: 0 16px; }
   .section { padding: 56px 0; }
 
-  .logo-wrapper { width: 40px; height: 40px; }
-  .site-branding .logo-mark { width: 28px; height: 28px; font-size: 0.75rem; }
+  .logo-wrapper { width: 35px; height: 35px; }
+  .site-branding .logo-mark { width: 24px; height: 24px; font-size: 0.65rem; }
 
   /* ── Navbar: grid layout so logo+actions share row 1, search takes row 2 ── */
   .navbar { padding: 10px 0; }
@@ -1141,8 +1142,8 @@ ul { list-style: none; }
 }
 
 @media (max-width: 480px) {
-  .logo-wrapper { width: 35px; height: 35px; }
-  .site-branding .logo-mark { width: 24px; height: 24px; font-size: 0.65rem; }
+  .logo-wrapper { width: 30px; height: 30px; }
+  .site-branding .logo-mark { width: 22px; height: 22px; font-size: 0.55rem; }
   .site-branding { font-size: 1rem; }
 
   .heading { font-size: 1.5rem; }
