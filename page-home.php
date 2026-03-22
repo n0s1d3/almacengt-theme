@@ -62,7 +62,7 @@ get_header();
 
 /* Info bar */
 .agt-slide-info {
-  background: #000;
+  background: #0d1a33;
   width: 100%;
   height: 110px;
   box-sizing: border-box;

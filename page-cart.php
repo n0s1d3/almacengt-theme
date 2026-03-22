@@ -458,7 +458,7 @@ get_header();
             <?php esc_html_e( 'Proceder al pago', 'almacengt' ); ?>
           </a>
           <?php endif; ?>
-          <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="agt-btn-continue">
+          <a href="<?php echo esc_url( wc_get_page_permalink( 'tienda' ) ); ?>" class="agt-btn-continue">
             <?php esc_html_e( 'Seguir comprando', 'almacengt' ); ?>
           </a>
         </div>
