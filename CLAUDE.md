@@ -18,7 +18,7 @@ A professional WordPress + WooCommerce theme for **AlmacenGT**, a Guatemalan onl
 `d:\Custom Websites\AlmacenGT\almacengt-theme\`
 
 - Text domain: `almacengt`
-- Version: 2.0
+- Version: 2.4
 - Container max-width: `1120px`
 
 ---
@@ -51,10 +51,11 @@ Source: https://coolors.co/palette/000000-14213d-fca311-e5e5e5-ffffff
 |---|---|
 | `style.css` | Full design system — CSS variables, all component styles, responsive breakpoints |
 | `woocommerce.css` | WooCommerce visual overrides (loaded after style.css) |
-| `functions.php` | Theme setup, WC support, script/style enqueuing, live search AJAX handler |
-| `header.php` | Topbar (black, full-width) + sticky dark navy navbar with search + account/cart icons |
-| `footer.php` | Minimal footer — just copyright text |
-| `index.php` | Homepage: hero → quick-cats strip → deals → categories → featured products |
+| `functions.php` | Theme setup, WC support, script/style enqueuing, live search AJAX handler. Asset version: `$ver = '2.4'` — increment on every CSS/JS change to bust browser cache |
+| `header.php` | `<div class="site-header">` wraps navbar + subnav (both sticky together). Subnav shows only categories WITH children (dropdown). Categories without children are hidden — accessible via shop page |
+| `footer.php` | BestBuy-style footer: service links row + 4-column grid (about, categories, help, account) |
+| `index.php` | Fallback template — NOT the homepage in production (page-home.php is used instead) |
+| `page-home.php` | **THE actual homepage** (`Template Name: AlmacenGT — Home`). Edit `$agt_slides` array for hero slider images/content. Edit `$agt_promo` for mid-page promo banner |
 | `page-shop.php` | **Custom shop page template** (`Template Name: AlmacenGT — Tienda`) — bypasses WC archive system |
 | `page-checkout.php` | Custom checkout template — renders `[woocommerce_checkout]` shortcode |
 | `page-cart.php` | Custom cart template — renders WooCommerce cart content |
@@ -65,8 +66,8 @@ Source: https://coolors.co/palette/000000-14213d-fca311-e5e5e5-ffffff
 | `page.php` | Generic WordPress page template (safety fallback) |
 | `sidebar-shop.php` | Shop sidebar: category filter + price range filter |
 | `woocommerce/content-product.php` | Product card component used in all grids |
-| `js/carousel.js` | Hero carousel stub (minimal, ready to expand) |
-| `js/live-search.js` | Desktop-only live search dropdown (debounced AJAX, product preview) |
+| `js/carousel.js` | Hero slider (agt-* and hp-*) + category strip continuous marquee + subnav dropdown tap logic |
+| `js/live-search.js` | AJAX search dropdown — all viewports ≥ 481px, max 3 results on mobile, titles truncated to 30 chars mobile / 45 desktop |
 | `template-parts/breadcrumb.php` | Breadcrumb helper |
 
 ---
@@ -82,12 +83,13 @@ Source: https://coolors.co/palette/000000-14213d-fca311-e5e5e5-ffffff
 
 ---
 
-## Homepage Structure (BestBuy-style)
-1. **Hero banner** — dark navy bg, amber eyebrow label, H1, subtitle, 2 CTA buttons
-2. **Quick category strip** — horizontal scrollable bar of product category links
-3. **Ofertas del Día** — 4-column deal grid with red SALE badge, WooCommerce on-sale products
-4. **Comprar por Categoría** — 4-column image tiles with gradient overlay (full-width gray bg section)
-5. **Productos Destacados** — 8-product grid using `content-product.php`
+## Homepage Structure (BestBuy-style) — page-home.php
+1. **Hero promotional slider** (`agt-hero-banner`) — 3 slides, dark gradient bg, black info bar below image. Edit `$agt_slides` PHP array at top of section. `'image'` key = Media Library URL, leave empty for gradient fallback. Info bar has fixed `height: 110px` — intentional, prevents height dancing between slides
+2. **Category strip** (`agt-cats-wrap`) — continuous marquee (RAF-based, 0.5px/frame). Items cloned in JS for seamless infinite loop. Only shows categories that have subcategories (parent=0 + children check). Speed: change `SPEED = 0.5` in carousel.js
+3. **Ofertas del Día** (`agt-deals-wrap`) — 4-column deal grid, WooCommerce on-sale products
+4. **Comprar por Categoría** (`agt-tiles-wrap`) — 4-column image tiles with dark gradient overlay
+5. **Productos Destacados** (`agt-featured-wrap`) — 4-column product grid
+6. **Mid-page promo banner** (`agt-promo-block`) — BestBuy MacBook-style block. Edit `$agt_promo` array. `'image'` key = Media Library URL
 
 ---
 
@@ -168,14 +170,14 @@ Without `search.php`, WordPress falls back to `index.php` for `?s=` queries, ren
 
 ## Live Search Dropdown
 
-Desktop-only (`@media (min-width: 1025px)`). Architecture:
+Works on all viewports ≥ 481px (NOT desktop-only anymore). Architecture:
 
-- **`functions.php`**: registers `wp_ajax_agt_live_search` + `wp_ajax_nopriv_agt_live_search` actions. Handler uses `check_ajax_referer`, sanitizes `$_GET['q']`, queries up to 6 products, returns `wp_send_json_success()` with array of `{title, url, price, image, cat}`.
-- **`wp_localize_script`** passes `agtSearch.ajaxUrl`, `agtSearch.nonce`, `agtSearch.searchUrl` to JS.
-- **`js/live-search.js`**: appends `.search-dropdown` into `.search-bar` form, debounces input (280ms, min 2 chars), fires GET to `admin-ajax.php`, renders product list with loading dots animation. Closes on outside click, Escape, or form submit.
-- **`style.css`**: `.search-bar` has `position: relative` (NOT `overflow: hidden`) so the dropdown can escape. All `.sdrop-*` styles and the `@keyframes sdrop-bounce` loading animation are inside `@media (min-width: 1025px)`.
+- **`functions.php`**: AJAX handler truncates title to 40 chars and returns only the first category. Queries 6 products max.
+- **`js/live-search.js`**: truncates title client-side to 30 chars on mobile / 45 on desktop (`window.innerWidth < 768`). Dropdown hides on mobile via `@media (max-width: 480px)`.
+- **`style.css`**: ALL `.sdrop-*` styles are global (no media query wrapper). `.search-dropdown { display: none }` is the base; `.search-dropdown.is-open { display: block }` reveals it. Mobile shows max 3 results via `.sdrop-item:nth-child(n+4) { display: none }`.
+- Both search inputs (`header.php` and `search.php`) have `maxlength="100"` and `text-overflow: ellipsis`.
 
-**Important:** `.search-bar` must NOT have `overflow: hidden` — it clips the absolutely-positioned dropdown. The button gets `border-radius: 0 4px 4px 0` directly instead.
+**Important:** `.search-bar` must NOT have `overflow: hidden` — it clips the absolutely-positioned dropdown.
 
 ---
 
@@ -183,6 +185,8 @@ Desktop-only (`@media (min-width: 1025px)`). Architecture:
 Order of flex children in `.navbar-inner`: **logo → search-bar → actions → main-nav**
 
 The `.search-bar` has `flex: 1` so it fills all available center space. This order was intentional — putting nav after actions means the search bar owns the center.
+
+On mobile (`≤ 768px`) `.navbar-inner` switches from flex to **CSS Grid** (3-col × 2-row): logo top-left, actions top-right, search bar spans full width on row 2. Main nav is `display: none` on mobile (hamburger menu pending).
 
 Search form has `<input type="hidden" name="post_type" value="product">` to filter results to WooCommerce products only.
 
@@ -215,3 +219,9 @@ Use `https://placehold.co/WxH/bgcolor/textcolor?text=Label` (NOT `via.placeholde
 | Search returns all post types | Form had no `post_type` parameter | Added `<input type="hidden" name="post_type" value="product">` |
 | Live search dropdown clipped | `.search-bar` had `overflow: hidden` | Removed `overflow: hidden`, added `position: relative`, moved border-radius to button |
 | WC shop page setting overrides custom template | WC intercepts the designated shop page URL and forces archive-product.php | Leave WC shop page blank when using page-shop.php |
+| Mobile navbar logo/actions pushed right | `flex-wrap: wrap` + `justify-content: space-between` caused element reflow | Replaced with CSS Grid (3-col × 2-row) at ≤ 768px breakpoint |
+| Live search dropdown unstyled on tablet (768–1024px) | All `.sdrop-*` CSS was inside `@media (min-width: 1025px)` — tablet viewports got no styles | Moved all dropdown CSS global (no media query), `.nth-child(n+4)` hides extra results on mobile |
+| Mobile search showing full-length product names | PHP truncation cached in browser; no JS fallback | Added client-side `truncate()` in live-search.js (30 chars mobile / 45 desktop) as guaranteed fallback |
+| Hero slider info bar height shifting between slides | Used `min-height` which allowed expansion when content differed between slides | Changed to fixed `height: 110px` + `overflow: hidden` on `.agt-slide-info` |
+| Subnav scrolled away with page | `position: sticky` was on `.navbar` only, not the wrapper | Wrapped navbar + subnav in `.site-header`, moved sticky to wrapper. `body.admin-bar` offset added |
+| Subnav showed all categories (including childless) | No children check before rendering dropdown | `get_terms(['parent' => $sncat->term_id])` — only render `.subnav-item` when children exist |

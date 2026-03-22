@@ -1,0 +1,37 @@
+# Obsidian vault config
+.obsidian/
+
+# WordPress
+*.log
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+.htaccess
+
+# Environment / secrets
+.env
+.env.*
+wp-config.php
+
+# Database dumps
+*.sql
+*.sqlite
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+ehthumbs.db
+
+# Editor / IDE
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# PHP
+*.phar

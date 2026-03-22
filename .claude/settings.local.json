@@ -10,5 +10,13 @@
       "WebSearch",
       "WebFetch(domain:almacengt.com)"
     ]
-  }
+  },
+
+  "mcpServers": { 
+    "obsidian": { 
+      "command": "npx", 
+      "args": ["-y", "obsidian-mcp"], 
+      "env": { "OBSIDIAN_API_KEY": "af82a33ea113d7bafd570e3544dafecd8f8db0480377851041699ff3ecc8f132" } 
+    } 
+  } 
 }
