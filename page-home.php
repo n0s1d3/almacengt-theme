@@ -634,7 +634,7 @@ get_header();
   $agt_slides = [
     [
       'brand'    => '',
-      'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_bal623bal623bal6.png', // paste full URL from Media Library
+      'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_bal623bal623bal6-1.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#14213d 0%,#1e3a6e 100%)',
       'headline' => __( 'Tecnología y electrónica al mejor precio en Guatemala', 'almacengt' ),
       'subline'  => __( 'Miles de productos. Envío rápido a toda Guatemala. Garantía real.', 'almacengt' ),

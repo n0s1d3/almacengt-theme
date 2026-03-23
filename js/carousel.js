@@ -145,6 +145,23 @@
     requestAnimationFrame(function () { calcHalf(); tick(); });
   }());
 
+  // ── Subnav dropdowns — position via fixed coords to escape overflow clip ─
+  var subnav = document.querySelector('.subnav');
+
+  function setDropPos(item) {
+    var link = item.querySelector('.subnav-link--parent');
+    if (!link || !subnav) return;
+    var subnavRect = subnav.getBoundingClientRect();
+    var linkRect   = link.getBoundingClientRect();
+    item.style.setProperty('--drop-top',  subnavRect.bottom + 'px');
+    item.style.setProperty('--drop-left', linkRect.left     + 'px');
+  }
+
+  document.querySelectorAll('.subnav-item').forEach(function (item) {
+    item.addEventListener('mouseenter', function () { setDropPos(item); });
+    item.addEventListener('touchstart',  function () { setDropPos(item); }, { passive: true });
+  });
+
   // ── Subnav dropdowns — tap to open on touch devices ──────────────────
   var isTouch = window.matchMedia('(hover: none)').matches;
 

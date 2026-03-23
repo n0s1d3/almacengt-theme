@@ -326,9 +326,9 @@ body.admin-bar .site-header { top: 32px; }
 
 .subnav-dropdown {
   display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
+  position: fixed;
+  top: var(--drop-top, -9999px);
+  left: var(--drop-left, 0px);
   min-width: 200px;
   background: #0d1a33;
   border: 1px solid rgba(255,255,255,0.1);
@@ -336,7 +336,7 @@ body.admin-bar .site-header { top: 32px; }
   border-radius: 0 0 6px 6px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.35);
   padding: 6px 0;
-  z-index: 200;
+  z-index: 9000;
 }
 .subnav-item:hover .subnav-dropdown,
 .subnav-item.is-open .subnav-dropdown { display: block; }
