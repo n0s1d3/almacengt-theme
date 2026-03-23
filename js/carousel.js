@@ -145,6 +145,35 @@
     requestAnimationFrame(function () { calcHalf(); tick(); });
   }());
 
+  // ── Mobile subnav hamburger menu toggle ───────────────────────────────
+  var subnavToggle = document.getElementById('subnav-toggle');
+  var subnav = document.querySelector('.subnav');
+
+  if (subnavToggle && subnav) {
+    subnavToggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      var isOpen = subnav.classList.contains('is-open');
+      subnav.classList.toggle('is-open');
+      subnavToggle.setAttribute('aria-expanded', !isOpen);
+    });
+
+    // Close subnav when clicking a link inside it
+    subnav.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        subnav.classList.remove('is-open');
+        subnavToggle.setAttribute('aria-expanded', false);
+      });
+    });
+
+    // Close subnav when clicking outside
+    document.addEventListener('click', function (e) {
+      if (!subnav.contains(e.target) && !subnavToggle.contains(e.target)) {
+        subnav.classList.remove('is-open');
+        subnavToggle.setAttribute('aria-expanded', false);
+      }
+    });
+  }
+
   // ── Subnav dropdowns — tap to open on touch devices ──────────────────
   var isTouch = window.matchMedia('(hover: none)').matches;
 
