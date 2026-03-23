@@ -8,6 +8,10 @@ wp-content/cache/
 wp-content/upgrade/
 .htaccess
 
+# Composer
+/vendor/
+composer.lock
+
 # Environment / secrets
 .env
 .env.*

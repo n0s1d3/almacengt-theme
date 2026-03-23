@@ -2,7 +2,6 @@
   'use strict';
 
   function initSlider(sliderId, prevSel, nextSel, dotSel) {
-    var slider = document.getElementById(sliderId);
     if (!slider) return;
 
     var slides  = slider.querySelectorAll('.agt-slide, .hp-slide');
@@ -145,29 +144,34 @@
     requestAnimationFrame(function () { calcHalf(); tick(); });
   }());
 
-  // ── Mobile subnav toggle ───────────────────────────────
-  var subnavToggle = document.getElementById('subnav-toggle');
-  var subnav = document.querySelector('.subnav');
+  // Wait for DOM to be ready for subnav functionality
+  document.addEventListener('DOMContentLoaded', function() {
 
-  if (subnavToggle && subnav) {
-    // Start with subnav open on mobile
-    subnav.classList.add('is-open');
+    // ── Mobile subnav toggle ───────────────────────────────
+    var subnavToggle = document.getElementById('subnav-toggle');
+    var subnav = document.querySelector('.subnav');
 
-    subnavToggle.addEventListener('click', function (e) {
-      e.preventDefault();
-      var isOpen = subnav.classList.contains('is-open');
-      subnav.classList.toggle('is-open');
-      subnavToggle.setAttribute('aria-expanded', !isOpen);
-    });
+    if (subnavToggle && subnav) {
+      // Start with subnav open on mobile
+      subnav.classList.add('is-open');
+      subnavToggle.setAttribute('aria-expanded', 'true');
 
-    // Close subnav when clicking a link inside it
-    subnav.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
-        subnav.classList.remove('is-open');
-        subnavToggle.setAttribute('aria-expanded', false);
+      subnavToggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        var isOpen = subnav.classList.contains('is-open');
+        subnav.classList.toggle('is-open');
+        subnavToggle.setAttribute('aria-expanded', !isOpen);
       });
-    });
-  }
+
+      // Close subnav when clicking a link inside it
+      subnav.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          subnav.classList.remove('is-open');
+          subnavToggle.setAttribute('aria-expanded', false);
+        });
+      });
+    }
+  });
 
   // ── Subnav dropdowns — tap to open on touch devices ──────────────────
   var isTouch = window.matchMedia('(hover: none)').matches;

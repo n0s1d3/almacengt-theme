@@ -1209,30 +1209,12 @@ body.admin-bar .site-header { top: 32px; }
   /* ── Subnav: collapsible on mobile ── */
   .subnav { 
     background: #0d1a33;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    display: block !important;
   }
-  .subnav.is-open { 
-    max-height: 200px;
+  .subnav:not(.is-open) { 
+    display: none !important;
   }
-  .subnav-inner { 
-    padding: 0;
-    gap: 0;
-  }
-  .subnav-link { 
-    color: rgba(255,255,255,0.72);
-    font-size: 0.78rem;
-    padding: 8px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    display: block;
-    width: 100%;
-    text-align: left;
-  }
-  .subnav-link:hover {
-    background: rgba(255,255,255,0.08);
-  }
-  .subnav-dropdown { display: none !important; }
+  /* Keep original subnav-inner styles for when expanded */
 
   .shop-layout {
     grid-template-columns: 1fr;
