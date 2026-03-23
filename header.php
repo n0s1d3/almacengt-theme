@@ -45,7 +45,7 @@
 
     <!-- Account + Cart + Subnav Toggle (mobile) -->
     <div class="actions">
-      <button class="subnav-toggle" id="subnav-toggle" aria-label="<?php esc_attr_e( 'Menú de categorías', 'almacengt' ); ?>" aria-expanded="false">
+      <button class="subnav-toggle" id="subnav-toggle" aria-label="<?php esc_attr_e( 'Mostrar/ocultar categorías', 'almacengt' ); ?>" aria-expanded="true">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
       </button>
       <?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
