@@ -251,10 +251,20 @@ ul { list-style: none; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  font-size: 0.85rem;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 0.75rem;
   color: rgba(255,255,255,0.75);
+}
+@media (max-width: 768px) {
+  .topbar-inner {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 0.65rem;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .topbar-inner span { line-height: 1.2; }
 }
 
 .site-header {
@@ -289,6 +299,26 @@ body.admin-bar .site-header { top: 32px; }
   padding-bottom: 8px;
 }
 .subnav-inner::-webkit-scrollbar { display: none; }
+
+/* Mobile: subnav toggle button */
+.subnav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  padding: 6px 12px;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.subnav-toggle:hover {
+  color: var(--accent);
+}
+@media (max-width: 768px) {
+  .subnav-toggle { display: flex; align-items: center; justify-content: center; }
+  .subnav-toggle[aria-expanded="true"] svg { transform: rotate(90deg); transition: transform 0.2s; }
+}
+
 .subnav-link {
   color: rgba(255,255,255,0.72);
   font-size: 0.82rem;
@@ -611,6 +641,14 @@ body.admin-bar .site-header { top: 32px; }
   transition: background 0.2s, color 0.2s;
   position: relative;
   white-space: nowrap;
+}
+@media (max-width: 768px) {
+  .action-link {
+    padding: 3px 6px;
+    gap: 2px;
+    font-size: 0.6rem;
+  }
+  .action-link svg { width: 14px; height: 14px; }
 }
 .action-link:hover {
   background: rgba(255,255,255,0.1);
@@ -1146,17 +1184,17 @@ body.admin-bar .site-header { top: 32px; }
   .container { padding: 0 16px; }
   .section { padding: 56px 0; }
 
-  .logo-wrapper { width: 35px; height: 35px; }
-  .site-branding .logo-mark { width: 24px; height: 24px; font-size: 0.65rem; }
+  .logo-wrapper { width: 30px; height: 30px; }
+  .site-branding .logo-mark { width: 20px; height: 20px; font-size: 0.55rem; }
 
   /* ── Navbar: grid layout so logo+actions share row 1, search takes row 2 ── */
-  .navbar { padding: 10px 0; }
+  .navbar { padding: 6px 0; }
   .navbar-inner {
     display: grid;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto auto;
     align-items: center;
-    gap: 8px 12px;
+    gap: 4px 8px;
     padding: 0 16px;
     /* override desktop justify-content:space-between */
     justify-content: unset;
@@ -1164,12 +1202,19 @@ body.admin-bar .site-header { top: 32px; }
   .site-branding { grid-column: 1; grid-row: 1; }
   .actions        { grid-column: 3; grid-row: 1; display: flex; align-items: center; gap: 4px; width: auto; justify-content: flex-end; }
   .search-bar     { grid-column: 1 / -1; grid-row: 2; width: 100%; flex: none; max-width: none; margin-top: 0; }
+  .search-bar input { padding: 6px 8px; font-size: 0.85rem; }
+  .search-bar button { padding: 0 10px; }
   .main-nav       { display: none; }
 
-  /* ── Subnav: keep background + scrollable on mobile ── */
-  .subnav { background: #0d1a33; }
-  .subnav-inner { padding: 6px 16px; gap: 4px; }
-  .subnav-link { color: rgba(255,255,255,0.72); font-size: 0.78rem; padding: 5px 10px; }
+  /* ── Subnav: collapsible on mobile ── */
+  .subnav { 
+    background: #0d1a33;
+    display: block !important;
+  }
+  .subnav:not(.is-open) { 
+    display: none !important;
+  }
+  /* Keep original subnav-inner styles for when expanded */
 
   .shop-layout {
     grid-template-columns: 1fr;

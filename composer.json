@@ -1,0 +1,28 @@
+{
+  "name": "almacengt/almacengt-theme",
+  "description": "Tema WordPress marketplace profesional",
+  "type": "wordpress-theme",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "php-stubs/wordpress-stubs": "^6.0",
+    "php-stubs/woocommerce-stubs": "^7.0",
+    "php-stubs/wordpress-globals": "^0.1.0",
+    "szepeviktor/phpstan-wordpress": "^1.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "php-stubs/generator": true
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "echo 'WordPress stubs installed. Restart VS Code to apply changes.'"
+    ],
+    "post-update-cmd": [
+      "echo 'WordPress stubs updated. Restart VS Code to apply changes.'"
+    ]
+  }
+}
