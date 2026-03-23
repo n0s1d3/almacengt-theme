@@ -145,8 +145,9 @@
     requestAnimationFrame(function () { calcHalf(); tick(); });
   }());
 
-  // ── Subnav dropdowns — position via fixed coords to escape overflow clip ─
-  var subnav = document.querySelector('.subnav');
+  // ── Subnav dropdowns — fixed positioning + hover grace period ───────────
+  var subnav     = document.querySelector('.subnav');
+  var DROP_DELAY = 500; // ms before closing after cursor leaves
 
   function setDropPos(item) {
     var link = item.querySelector('.subnav-link--parent');
@@ -158,8 +159,36 @@
   }
 
   document.querySelectorAll('.subnav-item').forEach(function (item) {
-    item.addEventListener('mouseenter', function () { setDropPos(item); });
-    item.addEventListener('touchstart',  function () { setDropPos(item); }, { passive: true });
+    var closeTimer = null;
+    var dropdown   = item.querySelector('.subnav-dropdown');
+
+    function cancelClose() { clearTimeout(closeTimer); }
+
+    function scheduleClose() {
+      closeTimer = setTimeout(function () {
+        item.classList.remove('is-hover');
+      }, DROP_DELAY);
+    }
+
+    // Desktop hover: update position, add is-hover; close siblings
+    item.addEventListener('mouseenter', function () {
+      cancelClose();
+      setDropPos(item);
+      document.querySelectorAll('.subnav-item.is-hover').forEach(function (el) {
+        if (el !== item) el.classList.remove('is-hover');
+      });
+      item.classList.add('is-hover');
+    });
+    item.addEventListener('mouseleave', scheduleClose);
+
+    // Keep open when cursor travels into the fixed dropdown (outside .subnav-item bounds)
+    if (dropdown) {
+      dropdown.addEventListener('mouseenter', cancelClose);
+      dropdown.addEventListener('mouseleave', scheduleClose);
+    }
+
+    // Touch: just update position (is-open handled by tap logic below)
+    item.addEventListener('touchstart', function () { setDropPos(item); }, { passive: true });
   });
 
   // ── Subnav dropdowns — tap to open on touch devices ──────────────────

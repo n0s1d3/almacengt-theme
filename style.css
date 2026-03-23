@@ -351,7 +351,7 @@ body.admin-bar .site-header { top: 32px; }
   flex-shrink: 0;
   transition: transform 0.2s;
 }
-.subnav-item:hover .subnav-chevron,
+.subnav-item.is-hover .subnav-chevron,
 .subnav-item.is-open .subnav-chevron { transform: rotate(180deg); }
 
 .subnav-dropdown {
@@ -368,7 +368,7 @@ body.admin-bar .site-header { top: 32px; }
   padding: 6px 0;
   z-index: 9000;
 }
-.subnav-item:hover .subnav-dropdown,
+.subnav-item.is-hover .subnav-dropdown,
 .subnav-item.is-open .subnav-dropdown { display: block; }
 
 .subnav-drop-link {
