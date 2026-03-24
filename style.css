@@ -360,6 +360,10 @@ body.admin-bar .site-header { top: 32px; }
   top: var(--drop-top, -9999px);
   left: var(--drop-left, 0px);
   min-width: 200px;
+  max-height: calc(100vh - var(--drop-top, 120px) - 16px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.25) transparent;
   background: #0d1a33;
   border: 1px solid rgba(255,255,255,0.1);
   border-top: none;
@@ -368,6 +372,9 @@ body.admin-bar .site-header { top: 32px; }
   padding: 6px 0;
   z-index: 9000;
 }
+.subnav-dropdown::-webkit-scrollbar { width: 4px; }
+.subnav-dropdown::-webkit-scrollbar-track { background: transparent; }
+.subnav-dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 2px; }
 .subnav-item.is-hover .subnav-dropdown,
 .subnav-item.is-open .subnav-dropdown { display: block; }
 

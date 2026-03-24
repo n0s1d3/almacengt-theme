@@ -149,6 +149,15 @@
   var subnav     = document.querySelector('.subnav');
   var DROP_DELAY = 500; // ms before closing after cursor leaves
 
+  // ── Subnav mobile toggle (hamburger) ─────────────────────────────────
+  var subnavToggle = document.getElementById('subnav-toggle');
+  if (subnavToggle && subnav) {
+    subnavToggle.addEventListener('click', function () {
+      var isOpen = subnav.classList.toggle('is-open');
+      subnavToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+
   function setDropPos(item) {
     var link = item.querySelector('.subnav-link--parent');
     if (!link || !subnav) return;
