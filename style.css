@@ -351,24 +351,31 @@ body.admin-bar .site-header { top: 32px; }
   flex-shrink: 0;
   transition: transform 0.2s;
 }
-.subnav-item:hover .subnav-chevron,
+.subnav-item.is-hover .subnav-chevron,
 .subnav-item.is-open .subnav-chevron { transform: rotate(180deg); }
 
 .subnav-dropdown {
   display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
+  position: fixed;
+  top: var(--drop-top, -9999px);
+  left: var(--drop-left, 0px);
   min-width: 200px;
+  max-height: calc(100vh - var(--drop-top, 120px) - 16px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.25) transparent;
   background: #0d1a33;
   border: 1px solid rgba(255,255,255,0.1);
   border-top: none;
   border-radius: 0 0 6px 6px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.35);
   padding: 6px 0;
-  z-index: 200;
+  z-index: 9000;
 }
-.subnav-item:hover .subnav-dropdown,
+.subnav-dropdown::-webkit-scrollbar { width: 4px; }
+.subnav-dropdown::-webkit-scrollbar-track { background: transparent; }
+.subnav-dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 2px; }
+.subnav-item.is-hover .subnav-dropdown,
 .subnav-item.is-open .subnav-dropdown { display: block; }
 
 .subnav-drop-link {
@@ -1207,14 +1214,8 @@ body.admin-bar .site-header { top: 32px; }
   .main-nav       { display: none; }
 
   /* ── Subnav: collapsible on mobile ── */
-  .subnav { 
-    background: #0d1a33;
-    display: block !important;
-  }
-  .subnav:not(.is-open) { 
-    display: none !important;
-  }
-  /* Keep original subnav-inner styles for when expanded */
+  .subnav { display: none; }
+  .subnav.is-open { display: block; }
 
   .shop-layout {
     grid-template-columns: 1fr;

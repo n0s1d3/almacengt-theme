@@ -2,6 +2,7 @@
   'use strict';
 
   function initSlider(sliderId, prevSel, nextSel, dotSel) {
+    var slider = document.getElementById(sliderId);
     if (!slider) return;
 
     var slides  = slider.querySelectorAll('.agt-slide, .hp-slide');
@@ -144,33 +145,60 @@
     requestAnimationFrame(function () { calcHalf(); tick(); });
   }());
 
-  // Wait for DOM to be ready for subnav functionality
-  document.addEventListener('DOMContentLoaded', function() {
+  // ── Subnav dropdowns — fixed positioning + hover grace period ───────────
+  var subnav     = document.querySelector('.subnav');
+  var DROP_DELAY = 500; // ms before closing after cursor leaves
 
-    // ── Mobile subnav toggle ───────────────────────────────
-    var subnavToggle = document.getElementById('subnav-toggle');
-    var subnav = document.querySelector('.subnav');
+  // ── Subnav mobile toggle (hamburger) ─────────────────────────────────
+  var subnavToggle = document.getElementById('subnav-toggle');
+  if (subnavToggle && subnav) {
+    subnavToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = subnav.classList.toggle('is-open');
+      subnavToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
 
-    if (subnavToggle && subnav) {
-      // Start with subnav open on mobile
-      subnav.classList.add('is-open');
-      subnavToggle.setAttribute('aria-expanded', 'true');
+  function setDropPos(item) {
+    var link = item.querySelector('.subnav-link--parent');
+    if (!link || !subnav) return;
+    var subnavRect = subnav.getBoundingClientRect();
+    var linkRect   = link.getBoundingClientRect();
+    item.style.setProperty('--drop-top',  subnavRect.bottom + 'px');
+    item.style.setProperty('--drop-left', linkRect.left     + 'px');
+  }
 
-      subnavToggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        var isOpen = subnav.classList.contains('is-open');
-        subnav.classList.toggle('is-open');
-        subnavToggle.setAttribute('aria-expanded', !isOpen);
-      });
+  document.querySelectorAll('.subnav-item').forEach(function (item) {
+    var closeTimer = null;
+    var dropdown   = item.querySelector('.subnav-dropdown');
 
-      // Close subnav when clicking a link inside it
-      subnav.querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', function () {
-          subnav.classList.remove('is-open');
-          subnavToggle.setAttribute('aria-expanded', false);
-        });
-      });
+    function cancelClose() { clearTimeout(closeTimer); }
+
+    function scheduleClose() {
+      closeTimer = setTimeout(function () {
+        item.classList.remove('is-hover');
+      }, DROP_DELAY);
     }
+
+    // Desktop hover: update position, add is-hover; close siblings
+    item.addEventListener('mouseenter', function () {
+      cancelClose();
+      setDropPos(item);
+      document.querySelectorAll('.subnav-item.is-hover').forEach(function (el) {
+        if (el !== item) el.classList.remove('is-hover');
+      });
+      item.classList.add('is-hover');
+    });
+    item.addEventListener('mouseleave', scheduleClose);
+
+    // Keep open when cursor travels into the fixed dropdown (outside .subnav-item bounds)
+    if (dropdown) {
+      dropdown.addEventListener('mouseenter', cancelClose);
+      dropdown.addEventListener('mouseleave', scheduleClose);
+    }
+
+    // Touch: just update position (is-open handled by tap logic below)
+    item.addEventListener('touchstart', function () { setDropPos(item); }, { passive: true });
   });
 
   // ── Subnav dropdowns — tap to open on touch devices ──────────────────
