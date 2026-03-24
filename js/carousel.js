@@ -152,7 +152,8 @@
   // ── Subnav mobile toggle (hamburger) ─────────────────────────────────
   var subnavToggle = document.getElementById('subnav-toggle');
   if (subnavToggle && subnav) {
-    subnavToggle.addEventListener('click', function () {
+    subnavToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
       var isOpen = subnav.classList.toggle('is-open');
       subnavToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });

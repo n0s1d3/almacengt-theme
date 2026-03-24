@@ -19,7 +19,7 @@ add_action( 'after_setup_theme', 'almacengt_setup' );
 
 function almacengt_scripts() {
   wp_enqueue_style( 'almacengt-inter', 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap', array(), null );
-  $ver = '2.5';
+  $ver = '2.6';
   wp_enqueue_style( 'almacengt-style', get_stylesheet_uri(), array('almacengt-inter'), $ver );
   // Opcional: estilos Woocommerce
   wp_enqueue_style( 'almacengt-woocommerce', get_template_directory_uri() . '/woocommerce.css', array('almacengt-style'), $ver );

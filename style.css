@@ -1214,14 +1214,8 @@ body.admin-bar .site-header { top: 32px; }
   .main-nav       { display: none; }
 
   /* ── Subnav: collapsible on mobile ── */
-  .subnav { 
-    background: #0d1a33;
-    display: block !important;
-  }
-  .subnav:not(.is-open) { 
-    display: none !important;
-  }
-  /* Keep original subnav-inner styles for when expanded */
+  .subnav { display: none; }
+  .subnav.is-open { display: block; }
 
   .shop-layout {
     grid-template-columns: 1fr;
