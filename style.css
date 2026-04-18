@@ -4,7 +4,7 @@ Theme URI: https://example.com/
 Author: Tu Nombre
 Author URI: https://example.com/
 Description: Tema WordPress marketplace profesional — Sincroniza productos, gestiona red de tiendas.
-Version: 2.0
+Version: 2.8
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: almacengt
@@ -976,12 +976,13 @@ body.admin-bar .site-header { top: 32px; }
   display: block;
   overflow: hidden;
   background: var(--surface);
+  aspect-ratio: 1 / 1;
 }
 
 .card img {
   width: 100%;
-  height: 220px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
 
@@ -999,6 +1000,9 @@ body.admin-bar .site-header { top: 32px; }
   color: var(--accent);
   margin-bottom: 6px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-title {
@@ -1006,6 +1010,15 @@ body.admin-bar .site-header { top: 32px; }
   font-weight: 600;
   margin: 4px 0 8px;
   line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Shop page: sidebar layout needs 3-col grid, not 4 */
+.shop-content .products-grid {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .card-title a {

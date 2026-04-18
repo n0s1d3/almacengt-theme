@@ -644,7 +644,7 @@ get_header();
     ],
     [
       'brand'    => '',
-      'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_6coxsk6coxsk6cox.png', // paste full URL from Media Library
+      'image'    => 'https://almacengt.com/wp-content/uploads/2026/04/Gemini_Generated_Image_6oma8l6oma8l6oma.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#2d1b4e 0%,#4a2070 100%)',
       'headline' => __( 'Los mejores celulares desde Q1,299', 'almacengt' ),
       'subline'  => __( 'Samsung, iPhone, Xiaomi y más. Envío gratis en compras mayores a Q499.', 'almacengt' ),
@@ -654,7 +654,7 @@ get_header();
     ],
     [
       'brand'    => '',
-      'image'    => 'https://almacengt.com/wp-content/uploads/2026/03/Gemini_Generated_Image_6oma8l6oma8l6oma.png', // paste full URL from Media Library
+      'image'    => 'https://almacengt.com/wp-content/uploads/2026/04/Gemini_Generated_Image_6coxsk6coxsk6cox.png', // paste full URL from Media Library
       'bg'       => 'linear-gradient(135deg,#0d2137 0%,#1a3a5c 100%)',
       'headline' => __( 'Laptops y PCs desde Q2,499', 'almacengt' ),
       'subline'  => __( 'Intel, AMD y Apple. El equipo que necesitas al precio que mereces.', 'almacengt' ),
@@ -871,7 +871,7 @@ get_header();
      ======================================================== */
   $featured_query = new WP_Query( array(
     'post_type'      => 'product',
-    'posts_per_page' => 8,
+    'posts_per_page' => 20,
     'post_status'    => 'publish',
     'tax_query'      => array( array(
       'taxonomy' => 'product_visibility',
@@ -880,11 +880,12 @@ get_header();
     ) ),
   ) );
 
-  /* Si no hay featured, mostrar los más recientes */
-  if ( ! $featured_query->have_posts() ) {
+  /* Si hay menos de 8 destacados, usar los más recientes */
+  if ( $featured_query->post_count < 8 ) {
+    wp_reset_postdata();
     $featured_query = new WP_Query( array(
       'post_type'      => 'product',
-      'posts_per_page' => 8,
+      'posts_per_page' => 20,
       'post_status'    => 'publish',
       'orderby'        => 'date',
       'order'          => 'DESC',
@@ -898,11 +899,13 @@ get_header();
       <h2 class="agt-section-title"><?php esc_html_e( 'Productos Destacados', 'almacengt' ); ?></h2>
       <div class="agt-products-grid">
         <?php
-        while ( $featured_query->have_posts() ) :
+        $agt_featured_shown = 0;
+        while ( $featured_query->have_posts() && $agt_featured_shown < 8 ) :
           $featured_query->the_post();
           global $product;
           $product = wc_get_product( get_the_ID() );
-          if ( ! $product || ! $product->is_visible() ) continue;
+          if ( ! $product ) continue;
+          $agt_featured_shown++;
 
           $price    = $product->get_price();
           $img_url  = get_the_post_thumbnail_url( get_the_ID(), 'woocommerce_single' )

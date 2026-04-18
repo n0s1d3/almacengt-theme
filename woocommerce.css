@@ -22,6 +22,11 @@
   padding: 0;
 }
 
+/* Shop page has a sidebar — 3 columns fit better in the remaining space */
+.woocommerce .shop-content .products-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .woocommerce .card {
   border: 1px solid #e5e5e5;
   border-radius: 12px;
@@ -162,19 +167,133 @@
 /* ════════════════════════════════════════════
    SINGLE PRODUCT PAGE
 ════════════════════════════════════════════ */
-.woocommerce div.product {
+
+/*
+  div.product direct children: span.onsale, .woocommerce-product-gallery,
+  .summary, .woocommerce-tabs, .related, .upsells
+  Use named grid areas so every child lands in the right cell.
+  .onsale is pulled out of flow with position: absolute.
+*/
+/* Scope to .single-product so this grid layout doesn't hit .card divs
+   on homepage/shop — wc_product_class() adds 'product' class to every card div. */
+.single-product .woocommerce div.product {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 48px;
+  grid-template-areas:
+    "gallery summary"
+    "tabs    tabs"
+    "related related";
+  gap: 40px;
   margin-bottom: 48px;
   align-items: start;
 }
 
+/* Sale badge — absolute so it doesn't consume a grid cell */
+.single-product .woocommerce div.product > span.onsale {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+/* Assign grid areas.
+   woocommerce-layout.css has: .woocommerce div.product div.images { width:48%; float:left }
+   and div.summary { width:48%; float:right } — specificity (0,3,2) beats our (0,3,1).
+   Use !important to force full-width inside the grid tracks. */
+.single-product .woocommerce div.product .woocommerce-product-gallery {
+  grid-area: gallery;
+  position: relative;
+  width: 100% !important;
+  float: none !important;
+}
+
+.single-product .woocommerce div.product .summary {
+  grid-area: summary;
+  padding-top: 0;
+  width: 100% !important;
+  float: none !important;
+}
+
+.single-product .woocommerce div.product .woocommerce-tabs {
+  grid-area: tabs;
+}
+
+.single-product .woocommerce div.product .related,
+.single-product .woocommerce div.product .upsells {
+  grid-area: related;
+}
+
+/* Product gallery image */
+.woocommerce-product-gallery__wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+.woocommerce-product-gallery__image {
+  display: block;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+}
+
+.woocommerce-product-gallery__image a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.woocommerce-product-gallery__image img,
+.single-product .woocommerce div.product .woocommerce-product-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 0;
+  margin: 0;
+}
+
+/* Thumbnail strip */
+.woocommerce-product-gallery .flex-control-thumbs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.woocommerce-product-gallery .flex-control-thumbs li {
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border: 2px solid #e5e5e5;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.woocommerce-product-gallery .flex-control-thumbs li img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.woocommerce-product-gallery .flex-control-thumbs li:hover,
+.woocommerce-product-gallery .flex-control-thumbs li .flex-active {
+  border-color: #fca311;
+}
+
 .woocommerce .product_title {
-  font-size: 2rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #000000;
   margin-bottom: 12px;
+  line-height: 1.3;
 }
 
 .woocommerce p.price,
@@ -264,12 +383,52 @@
 .woocommerce .product_meta a { color: #fca311; }
 .woocommerce .product_meta a:hover { text-decoration: underline; }
 
-/* Short description */
+/* Short description — collapsed with fade, expandable via JS */
 .woocommerce .woocommerce-product-details__short-description {
-  margin-bottom: 20px;
   font-size: 0.95rem;
   color: #555555;
   line-height: 1.7;
+  margin-bottom: 0;
+}
+
+.agt-desc-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.agt-desc-wrap.is-collapsed .woocommerce-product-details__short-description {
+  max-height: 6.8em; /* ~4 lines at 1.7 line-height */
+  overflow: hidden;
+}
+
+.agt-desc-wrap.is-collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(transparent, #ffffff);
+  pointer-events: none;
+}
+
+.agt-desc-toggle {
+  background: none;
+  border: none;
+  color: #fca311;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  display: block;
+  font-family: inherit;
+  margin-bottom: 16px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.agt-desc-toggle:hover {
+  color: #fdbb45;
 }
 
 /* ════════════════════════════════════════════
@@ -333,7 +492,6 @@
 .woocommerce .related,
 .woocommerce .upsells {
   margin-top: 48px;
-  grid-column: 1 / -1;
 }
 
 .woocommerce .related h2,
@@ -346,60 +504,35 @@
 .woocommerce .related ul.products,
 .woocommerce .upsells ul.products {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr);
+  /* Single row: auto-fill columns so all cards sit side by side */
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(200px, 1fr);
   gap: 20px;
   list-style: none;
-  padding: 0;
-  margin: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden;
 }
 
+/* woocommerce-layout.css injects a clearfix ::before that becomes a ghost
+   grid item and pushes all real items one column to the right. Kill it. */
+.woocommerce .related ul.products::before,
+.woocommerce .related ul.products::after,
+.woocommerce .upsells ul.products::before,
+.woocommerce .upsells ul.products::after {
+  display: none !important;
+}
+
+/* li.product: only reset WC's float-grid defaults.
+   Visual styling (border, shadow, image, text) is handled by .card in style.css
+   because content-product.php outputs .card/.card-image/.card-body — NOT WC's
+   default .woocommerce-loop-product__link/.woocommerce-loop-product__title classes. */
 .woocommerce .related ul.products li.product,
 .woocommerce .upsells ul.products li.product {
-  border: 1px solid #e5e5e5;
-  border-radius: 12px;
-  background: #ffffff;
-  overflow: hidden;
-  padding: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.woocommerce .related ul.products li.product:hover,
-.woocommerce .upsells ul.products li.product:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-}
-
-.woocommerce .related ul.products li.product img,
-.woocommerce .upsells ul.products li.product img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  margin: 0;
-  display: block;
-}
-
-.woocommerce .related ul.products li.product .woocommerce-loop-product__title,
-.woocommerce .upsells ul.products li.product .woocommerce-loop-product__title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  padding: 12px 14px 4px;
-  color: #000000;
-}
-
-.woocommerce .related ul.products li.product .price,
-.woocommerce .upsells ul.products li.product .price {
-  padding: 0 14px;
-  font-size: 1rem;
-  color: #fca311;
-  font-weight: 700;
-}
-
-.woocommerce .related ul.products li.product .button,
-.woocommerce .upsells ul.products li.product .button {
-  margin: 10px 14px 14px;
-  display: block;
-  text-align: center;
+  width: 100% !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* ════════════════════════════════════════════
@@ -822,10 +955,7 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .woocommerce .related ul.products,
-  .woocommerce .upsells ul.products {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  /* already 3 cols at desktop, no change needed at 1024px */
 }
 
 @media (max-width: 768px) {
@@ -834,8 +964,13 @@
     gap: 16px;
   }
 
-  .woocommerce div.product {
+  .single-product .woocommerce div.product {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "gallery"
+      "summary"
+      "tabs"
+      "related";
     gap: 24px;
   }
 
