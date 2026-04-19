@@ -592,6 +592,139 @@ get_header();
   letter-spacing: 0.5px;
 }
 
+/* --- Brand banners marquee -------------------------------- */
+.agt-brands-wrap {
+  background: #fff;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.agt-brands-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.agt-brands-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.agt-brands-header .agt-section-title { margin: 0; }
+.agt-brands-viewall {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--primary);
+  padding: 7px 18px;
+  border-radius: 4px;
+  transition: background .15s, color .15s;
+}
+.agt-brands-viewall:hover { background: var(--primary); color: #fff; }
+.agt-brands-overflow {
+  overflow: hidden;
+  position: relative;
+}
+.agt-brands-overflow::before,
+.agt-brands-overflow::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 60px;
+  z-index: 5;
+  pointer-events: none;
+}
+.agt-brands-overflow::before { left: 0; background: linear-gradient(to right, #fff, transparent); }
+.agt-brands-overflow::after  { right: 0; background: linear-gradient(to left, #fff, transparent); }
+.agt-brands-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: agt-brands-scroll 40s linear infinite;
+}
+.agt-brands-track:hover { animation-play-state: paused; }
+@keyframes agt-brands-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.agt-brand-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  height: 76px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 0 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: border-color .2s, box-shadow .2s, transform .15s, background .15s;
+}
+.agt-brand-card:hover {
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(252,163,17,.22);
+  transform: translateY(-3px);
+}
+.agt-brand-name {
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+  line-height: 1;
+}
+.agt-brand-logo {
+  max-width: 110px;
+  max-height: 48px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.65;
+  transition: filter .2s, opacity .2s;
+}
+.agt-brand-card:hover .agt-brand-logo {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+/* --- All products section --------------------------------- */
+.agt-allproducts-wrap {
+  background: var(--surface);
+  padding: 40px 0 56px;
+  border-top: 1px solid var(--border);
+}
+.agt-allproducts-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.agt-allproducts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.agt-allproducts-header .agt-section-title { margin: 0; }
+.agt-allproducts-cta-row {
+  text-align: center;
+  margin-top: 32px;
+}
+.agt-allproducts-cta-row .agt-btn {
+  font-size: 15px;
+  padding: 14px 48px;
+}
+
 /* --- Responsive ------------------------------------------ */
 @media (max-width: 1024px) {
   .agt-deals-grid,
@@ -747,6 +880,87 @@ get_header();
     </div>
   </section>
   <?php endif; ?>
+
+  <?php
+  /* ========================================================
+     2b. BRAND BANNERS — scrolling marquee of partner brands
+     ─────────────────────────────────────────────────────────
+     Add / remove entries from $agt_brands to customize.
+     'color' → brand's primary hex color for the name text.
+     ======================================================== */
+  /*
+   * 'logo' → filename inside almacengt-theme/images/brands/  (leave empty to show brand name as text fallback)
+   * 'name' → used as alt text and for the product search link
+   */
+  $agt_brands = [
+    [ 'name' => 'HP',         'logo' => 'hp.png'       ],
+    [ 'name' => 'Epson',      'logo' => 'epson.png'    ],
+    [ 'name' => 'Samsung',    'logo' => 'samsung.png'  ],
+    [ 'name' => 'Sony',       'logo' => 'sony.png'     ],
+    [ 'name' => 'Kingston',   'logo' => 'kingston.png' ],
+    [ 'name' => 'LG',         'logo' => 'lg.png'       ],
+    [ 'name' => 'Asus',       'logo' => 'asus.png'     ],
+    [ 'name' => 'Lenovo',     'logo' => 'lenovo.png'   ],
+    [ 'name' => 'Acer',       'logo' => 'acer.png'     ],
+    [ 'name' => 'Canon',      'logo' => 'canon.png'    ],
+    [ 'name' => 'Logitech',   'logo' => 'logitech.png' ],
+    [ 'name' => 'Intel',      'logo' => 'intel.png'    ],
+    [ 'name' => 'AMD',        'logo' => 'amd.png'      ],
+    [ 'name' => 'Apple',      'logo' => 'apple.png'    ],
+    [ 'name' => 'WD',         'logo' => 'wd.png'       ],
+    [ 'name' => 'Toshiba',    'logo' => 'toshiba.png'  ],
+    [ 'name' => 'Xiaomi',     'logo' => 'xiaomi.png'   ],
+    [ 'name' => 'Corsair',    'logo' => 'corsair.png'  ],
+  ];
+  $brands_img_dir  = get_template_directory() . '/images/brands/';
+  $brands_img_url  = get_template_directory_uri() . '/images/brands/';
+  ?>
+  <section class="agt-brands-wrap" aria-label="<?php esc_attr_e( 'Marcas destacadas', 'almacengt' ); ?>">
+    <div class="agt-brands-inner">
+      <div class="agt-brands-header">
+        <h2 class="agt-section-title"><?php esc_html_e( 'Marcas Destacadas', 'almacengt' ); ?></h2>
+        <a href="<?php echo esc_url( $shop_url ); ?>" class="agt-brands-viewall">
+          <?php esc_html_e( 'Ver toda la tienda →', 'almacengt' ); ?>
+        </a>
+      </div>
+      <div class="agt-brands-overflow">
+        <div class="agt-brands-track" id="agt-brands-track">
+          <?php
+          /* Filter to only brands that have a logo file present */
+          $agt_brands_active = array_filter( $agt_brands, function( $b ) use ( $brands_img_dir ) {
+            return ! empty( $b['logo'] ) && file_exists( $brands_img_dir . $b['logo'] );
+          } );
+          /* Fallback: show all with text if no logos uploaded yet */
+          if ( empty( $agt_brands_active ) ) {
+            $agt_brands_active = $agt_brands;
+          }
+          /* Output items twice for seamless infinite loop */
+          $brand_sets = [ array_values( $agt_brands_active ), array_values( $agt_brands_active ) ];
+          foreach ( $brand_sets as $idx => $set ) :
+            foreach ( $set as $b ) :
+              $search_url  = home_url( '/?s=' . rawurlencode( $b['name'] ) . '&post_type=product' );
+              $has_logo    = ! empty( $b['logo'] ) && file_exists( $brands_img_dir . $b['logo'] );
+          ?>
+          <a href="<?php echo esc_url( $search_url ); ?>"
+             class="agt-brand-card"
+             <?php echo $idx === 1 ? 'aria-hidden="true" tabindex="-1"' : ''; ?>>
+            <?php if ( $has_logo ) : ?>
+              <img src="<?php echo esc_url( $brands_img_url . $b['logo'] ); ?>"
+                   alt="<?php echo esc_attr( $b['name'] ); ?>"
+                   class="agt-brand-logo"
+                   loading="lazy">
+            <?php else : ?>
+              <span class="agt-brand-name"><?php echo esc_html( $b['name'] ); ?></span>
+            <?php endif; ?>
+          </a>
+          <?php
+            endforeach;
+          endforeach;
+          ?>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <?php
   /* ========================================================
@@ -944,6 +1158,84 @@ get_header();
           </div>
         </div>
         <?php endwhile; wp_reset_postdata(); ?>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
+
+  <?php
+  /* ========================================================
+     5b. TODOS LOS PRODUCTOS — full browsable product grid
+     Shows the 12 most recent products. Links to full shop.
+     ======================================================== */
+  $allproducts_query = new WP_Query( array(
+    'post_type'      => 'product',
+    'posts_per_page' => 12,
+    'post_status'    => 'publish',
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+  ) );
+
+  if ( $allproducts_query->have_posts() ) :
+  ?>
+  <section class="agt-allproducts-wrap">
+    <div class="agt-allproducts-inner">
+      <div class="agt-allproducts-header">
+        <h2 class="agt-section-title"><?php esc_html_e( 'Todos los Productos', 'almacengt' ); ?></h2>
+        <a href="<?php echo esc_url( $shop_url ); ?>" class="agt-brands-viewall">
+          <?php esc_html_e( 'Ver toda la tienda →', 'almacengt' ); ?>
+        </a>
+      </div>
+      <div class="agt-products-grid">
+        <?php
+        while ( $allproducts_query->have_posts() ) :
+          $allproducts_query->the_post();
+          global $product;
+          $product = wc_get_product( get_the_ID() );
+          if ( ! $product || ! $product->is_visible() ) continue;
+
+          $price    = $product->get_price();
+          $img_url  = get_the_post_thumbnail_url( get_the_ID(), 'woocommerce_single' )
+                   ?: wc_placeholder_img_src( 'woocommerce_single' );
+          $avg      = $product->get_average_rating();
+          $count    = $product->get_rating_count();
+          $stars    = str_repeat( '★', (int) round( $avg ) ) . str_repeat( '☆', 5 - (int) round( $avg ) );
+          $cart_url = $product->is_type( 'simple' )
+            ? esc_url( wc_get_cart_url() . '?add-to-cart=' . get_the_ID() )
+            : get_permalink();
+        ?>
+        <div class="agt-product-card">
+          <a href="<?php echo esc_url( get_permalink() ); ?>" class="agt-product-card-img">
+            <img src="<?php echo esc_url( $img_url ); ?>"
+                 alt="<?php the_title_attribute(); ?>"
+                 loading="lazy">
+          </a>
+          <div class="agt-product-card-body">
+            <a href="<?php echo esc_url( get_permalink() ); ?>" class="agt-product-card-name">
+              <?php the_title(); ?>
+            </a>
+            <?php if ( $count > 0 ) : ?>
+            <div class="agt-product-card-rating">
+              <span class="stars"><?php echo esc_html( $stars ); ?></span>
+              <span>(<?php echo esc_html( $count ); ?>)</span>
+            </div>
+            <?php endif; ?>
+            <div class="agt-product-card-price">
+              Q<?php echo number_format( (float) $price, 2 ); ?>
+            </div>
+          </div>
+          <div class="agt-product-card-footer">
+            <a href="<?php echo esc_url( $cart_url ); ?>" class="agt-btn agt-btn-primary">
+              <?php esc_html_e( 'Agregar al carrito', 'almacengt' ); ?>
+            </a>
+          </div>
+        </div>
+        <?php endwhile; wp_reset_postdata(); ?>
+      </div>
+      <div class="agt-allproducts-cta-row">
+        <a href="<?php echo esc_url( $shop_url ); ?>" class="agt-btn agt-btn-primary">
+          <?php esc_html_e( 'Ver todos los productos en la tienda →', 'almacengt' ); ?>
+        </a>
       </div>
     </div>
   </section>
