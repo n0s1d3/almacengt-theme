@@ -696,6 +696,151 @@ get_header();
   opacity: 1;
 }
 
+/* --- Category showcase (dark panel + horizontal scroll) -- */
+.agt-showcase-wrap {
+  background: var(--surface);
+  padding: 40px 0;
+}
+.agt-showcase-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.agt-showcase-block {
+  background: #1c1c1c;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  min-height: 280px;
+}
+.agt-showcase-panel {
+  width: 220px;
+  flex-shrink: 0;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.agt-showcase-panel-top { display: flex; flex-direction: column; gap: 10px; }
+.agt-showcase-panel-headline {
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.25;
+  margin: 0;
+}
+.agt-showcase-panel-sub {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,.58);
+  line-height: 1.55;
+  margin: 0;
+}
+.agt-showcase-panel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255,255,255,.4);
+  transition: color .15s, text-decoration-color .15s;
+}
+.agt-showcase-panel-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+.agt-showcase-cards {
+  flex: 1;
+  overflow-x: auto;
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px 16px 12px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  align-items: stretch;
+}
+.agt-showcase-cards::-webkit-scrollbar { display: none; }
+.agt-showcase-card {
+  background: #fff;
+  border-radius: 8px;
+  min-width: 168px;
+  max-width: 168px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform .2s, box-shadow .2s;
+}
+.agt-showcase-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
+.agt-showcase-card-img {
+  position: relative;
+  height: 140px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+}
+.agt-showcase-card-img img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  transition: transform .3s;
+}
+.agt-showcase-card:hover .agt-showcase-card-img img { transform: scale(1.05); }
+.agt-showcase-save-badge {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: #d0021b;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 2px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.agt-showcase-card-body {
+  padding: 10px 12px 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.agt-showcase-card-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.agt-showcase-card-prices { margin-top: auto; display: flex; flex-direction: column; gap: 1px; }
+.agt-showcase-price-current {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text);
+}
+.agt-showcase-price-was {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+@media (max-width: 768px) {
+  .agt-showcase-block { flex-direction: column; }
+  .agt-showcase-panel { width: 100%; padding: 20px; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .agt-showcase-panel-sub { display: none; }
+}
+
 /* --- All products section --------------------------------- */
 .agt-allproducts-wrap {
   background: var(--surface);
@@ -893,27 +1038,26 @@ get_header();
    * 'name' → used as alt text and for the product search link
    */
   $agt_brands = [
-    [ 'name' => 'HP',         'logo' => 'hp.png'       ],
-    [ 'name' => 'Epson',      'logo' => 'epson.png'    ],
-    [ 'name' => 'Samsung',    'logo' => 'samsung.png'  ],
-    [ 'name' => 'Sony',       'logo' => 'sony.png'     ],
-    [ 'name' => 'Kingston',   'logo' => 'kingston.png' ],
-    [ 'name' => 'LG',         'logo' => 'lg.png'       ],
-    [ 'name' => 'Asus',       'logo' => 'asus.png'     ],
-    [ 'name' => 'Lenovo',     'logo' => 'lenovo.png'   ],
-    [ 'name' => 'Acer',       'logo' => 'acer.png'     ],
-    [ 'name' => 'Canon',      'logo' => 'canon.png'    ],
-    [ 'name' => 'Logitech',   'logo' => 'logitech.png' ],
-    [ 'name' => 'Intel',      'logo' => 'intel.png'    ],
-    [ 'name' => 'AMD',        'logo' => 'amd.png'      ],
-    [ 'name' => 'Apple',      'logo' => 'apple.png'    ],
-    [ 'name' => 'WD',         'logo' => 'wd.png'       ],
-    [ 'name' => 'Toshiba',    'logo' => 'toshiba.png'  ],
-    [ 'name' => 'Xiaomi',     'logo' => 'xiaomi.png'   ],
-    [ 'name' => 'Corsair',    'logo' => 'corsair.png'  ],
+    [ 'name' => 'HP',         'logo' => 'HP.png'       ],
+    [ 'name' => 'Epson',      'logo' => 'Epson.svg'    ],
+    [ 'name' => 'Samsung',    'logo' => 'Samsung.png'  ],
+    [ 'name' => 'Sony',       'logo' => 'Sony.png'     ],
+    [ 'name' => 'Kingston',   'logo' => 'Kingston.svg' ],
+    [ 'name' => 'LG',         'logo' => 'LG.svg'       ],
+    [ 'name' => 'Asus',       'logo' => 'ASUS.svg'     ],
+    [ 'name' => 'Lenovo',     'logo' => 'Lenovo.png'   ],
+    [ 'name' => 'Acer',       'logo' => 'Acer.svg'     ],
+    [ 'name' => 'Canon',      'logo' => 'Canon.svg'    ],
+    [ 'name' => 'Logitech',   'logo' => 'Logitech.svg' ],
+    [ 'name' => 'Intel',      'logo' => 'Intel.png'    ],
+    [ 'name' => 'AMD',        'logo' => 'AMD.svg'      ],
+    [ 'name' => 'Apple',      'logo' => 'Apple.png'    ],
+    [ 'name' => 'WD',         'logo' => 'WD.svg'       ],
+    [ 'name' => 'Toshiba',    'logo' => 'Toshiba.svg'  ],
+    [ 'name' => 'Xiaomi',     'logo' => 'Xiaomi.svg'   ],
+    [ 'name' => 'Corsair',    'logo' => 'Corsair.svg'  ],
   ];
-  $brands_img_dir  = get_template_directory() . '/images/brands/';
-  $brands_img_url  = get_template_directory_uri() . '/images/brands/';
+  $brands_img_url = get_template_directory_uri() . '/images/brands/';
   ?>
   <section class="agt-brands-wrap" aria-label="<?php esc_attr_e( 'Marcas destacadas', 'almacengt' ); ?>">
     <div class="agt-brands-inner">
@@ -926,20 +1070,12 @@ get_header();
       <div class="agt-brands-overflow">
         <div class="agt-brands-track" id="agt-brands-track">
           <?php
-          /* Filter to only brands that have a logo file present */
-          $agt_brands_active = array_filter( $agt_brands, function( $b ) use ( $brands_img_dir ) {
-            return ! empty( $b['logo'] ) && file_exists( $brands_img_dir . $b['logo'] );
-          } );
-          /* Fallback: show all with text if no logos uploaded yet */
-          if ( empty( $agt_brands_active ) ) {
-            $agt_brands_active = $agt_brands;
-          }
           /* Output items twice for seamless infinite loop */
-          $brand_sets = [ array_values( $agt_brands_active ), array_values( $agt_brands_active ) ];
+          $brand_sets = [ $agt_brands, $agt_brands ];
           foreach ( $brand_sets as $idx => $set ) :
             foreach ( $set as $b ) :
-              $search_url  = home_url( '/?s=' . rawurlencode( $b['name'] ) . '&post_type=product' );
-              $has_logo    = ! empty( $b['logo'] ) && file_exists( $brands_img_dir . $b['logo'] );
+              $search_url = home_url( '/?s=' . rawurlencode( $b['name'] ) . '&post_type=product' );
+              $has_logo   = ! empty( $b['logo'] );
           ?>
           <a href="<?php echo esc_url( $search_url ); ?>"
              class="agt-brand-card"
@@ -1074,6 +1210,97 @@ get_header();
         </a>
         <?php endforeach; ?>
       </div>
+    </div>
+  </section>
+  <?php endif; ?>
+
+  <?php
+  /* ========================================================
+     4b. CATEGORY SHOWCASE — dark panel + horizontal product scroll
+     ─────────────────────────────────────────────────────────
+     Pulls the top 3 categories by product count and renders
+     a BestBuy-style showcase block for each one.
+     ======================================================== */
+  $showcase_cats = get_terms( array(
+    'taxonomy'   => 'product_cat',
+    'orderby'    => 'count',
+    'order'      => 'DESC',
+    'hide_empty' => true,
+    'number'     => 3,
+    'exclude'    => array( get_option( 'default_product_cat' ) ),
+  ) );
+
+  if ( ! is_wp_error( $showcase_cats ) && ! empty( $showcase_cats ) ) :
+  ?>
+  <section class="agt-showcase-wrap">
+    <div class="agt-showcase-inner">
+      <?php foreach ( $showcase_cats as $sc_cat ) :
+        $sc_query = new WP_Query( array(
+          'post_type'      => 'product',
+          'posts_per_page' => 10,
+          'post_status'    => 'publish',
+          'tax_query'      => array( array(
+            'taxonomy' => 'product_cat',
+            'field'    => 'term_id',
+            'terms'    => $sc_cat->term_id,
+          ) ),
+        ) );
+        if ( ! $sc_query->have_posts() ) continue;
+        $sc_desc     = $sc_cat->description ?: __( 'Los mejores productos al mejor precio en Guatemala.', 'almacengt' );
+        $sc_cat_link = get_term_link( $sc_cat, 'product_cat' );
+      ?>
+      <div class="agt-showcase-block">
+        <div class="agt-showcase-panel">
+          <div class="agt-showcase-panel-top">
+            <h2 class="agt-showcase-panel-headline"><?php echo esc_html( $sc_cat->name ); ?></h2>
+            <p class="agt-showcase-panel-sub"><?php echo esc_html( wp_strip_all_tags( $sc_desc ) ); ?></p>
+          </div>
+          <a href="<?php echo esc_url( $sc_cat_link ); ?>" class="agt-showcase-panel-link">
+            <?php esc_html_e( 'Ver todo', 'almacengt' ); ?> &rarr;
+          </a>
+        </div>
+        <div class="agt-showcase-cards">
+          <?php
+          while ( $sc_query->have_posts() ) :
+            $sc_query->the_post();
+            global $product;
+            $product = wc_get_product( get_the_ID() );
+            if ( ! $product || ! $product->is_visible() ) continue;
+
+            $sc_price   = $product->get_price();
+            $sc_regular = $product->get_regular_price();
+            $sc_sale    = $product->get_sale_price();
+            $sc_saving  = ( $sc_regular && $sc_sale && $sc_regular > $sc_sale )
+                          ? number_format( $sc_regular - $sc_sale, 2 )
+                          : '';
+            $sc_img     = get_the_post_thumbnail_url( get_the_ID(), 'woocommerce_single' )
+                       ?: wc_placeholder_img_src( 'woocommerce_single' );
+          ?>
+          <a href="<?php echo esc_url( get_permalink() ); ?>" class="agt-showcase-card">
+            <div class="agt-showcase-card-img">
+              <img src="<?php echo esc_url( $sc_img ); ?>"
+                   alt="<?php the_title_attribute(); ?>"
+                   loading="lazy">
+              <?php if ( $sc_saving ) : ?>
+              <span class="agt-showcase-save-badge">
+                <?php printf( esc_html__( 'Ahorra Q%s', 'almacengt' ), $sc_saving ); ?>
+              </span>
+              <?php endif; ?>
+            </div>
+            <div class="agt-showcase-card-body">
+              <span class="agt-showcase-card-name"><?php the_title(); ?></span>
+              <div class="agt-showcase-card-prices">
+                <span class="agt-showcase-price-current">Q<?php echo number_format( (float) $sc_price, 2 ); ?></span>
+                <?php if ( $sc_saving ) : ?>
+                <span class="agt-showcase-price-was">Q<?php echo number_format( (float) $sc_regular, 2 ); ?></span>
+                <?php endif; ?>
+              </div>
+            </div>
+          </a>
+          <?php endwhile; wp_reset_postdata(); ?>
+        </div>
+      </div>
+      <?php endforeach; ?>
     </div>
   </section>
   <?php endif; ?>
