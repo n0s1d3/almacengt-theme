@@ -25,7 +25,7 @@ get_header();
 
                 <h3><?php esc_html_e( 'Soporte al Cliente', 'almacengt' ); ?></h3>
                 <p><?php esc_html_e( 'Para consultas sobre pedidos, productos o soporte técnico, contáctanos vía WhatsApp o email.', 'almacengt' ); ?></p>
-                <p><strong>WhatsApp:</strong> +502 7931 3001</p>
+                <p><strong>WhatsApp: </strong> +502 7931 3001</p>
             </div>
         </div>
     </section>
