@@ -19,13 +19,13 @@ get_header();
             <div class="contact-info">
                 <h3><?php esc_html_e( 'Información de Contacto', 'almacengt' ); ?></h3>
                 <p><strong><?php esc_html_e( 'Dirección:', 'almacengt' ); ?></strong> <?php esc_html_e( 'Ciudad de Guatemala, Guatemala', 'almacengt' ); ?></p>
-                <p><strong><?php esc_html_e( 'Teléfono:', 'almacengt' ); ?></strong> +502 1234 5678</p>
+                <p><strong><?php esc_html_e( 'Teléfono:', 'almacengt' ); ?></strong> +502 7931 3001</p>
                 <p><strong><?php esc_html_e( 'Email:', 'almacengt' ); ?></strong> info@almacengt.com</p>
                 <p><strong><?php esc_html_e( 'Horarios:', 'almacengt' ); ?></strong> Lunes a Viernes 8:00 AM - 6:00 PM</p>
 
                 <h3><?php esc_html_e( 'Soporte al Cliente', 'almacengt' ); ?></h3>
                 <p><?php esc_html_e( 'Para consultas sobre pedidos, productos o soporte técnico, contáctanos vía WhatsApp o email.', 'almacengt' ); ?></p>
-                <p><strong>WhatsApp:</strong> +502 1234 5678</p>
+                <p><strong>WhatsApp:</strong> +502 7931 3001</p>
             </div>
         </div>
     </section>
